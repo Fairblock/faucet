@@ -1,6 +1,6 @@
 # faucet
 
-General Faucet for Cosmos SDK testnet. There are two versions: [Cosmos](https://github.com/ping.pub/faucet) and [Evmos](https://github.com/ping-pub/faucet/tree/evmos)
+Faucet for fairyring testnet.
 
 <img width="1052" alt="preview" src="https://user-images.githubusercontent.com/2882920/202998797-b793c52b-9ad7-47fe-a80b-a0f75eff6ba1.png">
 
@@ -16,55 +16,65 @@ v16.15.0
  - clone code:
  
  ```sh
- git clone https://github.com/ping-pub/faucet.git
+ git clone https://github.com/Fairblock/faucet.git
  ```
  
  - setup configs, you have to change everything you need in `./config.js`
  ```js
  {
-    "port": 80,  // http port 
-    "db": {
-        "path": "~/.faucet.db" // db for frequency checker(WIP)
-    }, 
-    "blockchain": {
-        "rpc_endpoint": "https://rpc.sentry-02.theta-testnet.polypore.xyz"
+  port: 8668, // http port
+  db: {
+    path: "./db/faucet.db" // save request states
+  },
+  project: {
+    name: "Fairyring",
+    logo: "https://pbs.twimg.com/profile_images/1674527932956409860/ja7Woiz6_400x400.jpg",
+    deployer: `<a href="https://fairblock.network" target="_blank">Fairblock</a>`
+  },
+  blockchain: {
+    name: "fairytest-3",
+    endpoint: {
+      // make sure that CORS is enabled in rpc section in config.toml
+      // cors_allowed_origins = ["*"]
+      rpc_endpoint: " http://52.23.185.183:26657",
     },
-    "sender": {
-        "mnemonic": "surround miss nominee dream gap cross assault thank captain prosper drop duty group candy wealth weather scale put",
-        "option": {
-            "hdPaths": ["m/44'/118'/0'/0/0"],
-            "prefix": "cosmos"  //address prefix
-        }
+    sender: {
+      mnemonic: "wise rule method circle general over tool exhibit over group nuclear meat inform rival before short inner bind short enact team dinner swift ritual",
+      option: {
+        hdPaths: [stringToPath("m/44'/118'/0'/0/0")],
+        prefix: "fairy"
+      }
     },
-    "tx": {
-        "amount": {
-            "denom": "uatom",
-            "amount": "10000" // how many does tx send for each request.
-          },
-        "fee": {
-            "amount": [
-                {
-                  "amount": "1000",
-                  "denom":  "uatom"
-                }
-            ],
-            "gas": "200000"
+    tx: [
+      {
+        amount: {
+          denom: "stake",
+          amount: "100000000000"
         },
-        "frequency_in_24h": "1"
-    },
-    "project": {
-        "testnet": "Ping Testnet", // What ever you want, recommend: chain-id, 
-        "logo": "https://ping.pub/logo.svg",
-        "deployer": ""
-    },
-    // request limitation
+        fee: {
+          amount: [],
+          gas: "200000"
+        },
+      },
+      {
+        amount: {
+          denom: "ufairy",
+          amount: "300000"
+        },
+        fee: {
+          amount: [],
+          gas: "200000"
+        },
+      },
+    ],
     limit: {
-        // how many times each wallet address is allowed in a window(24h)
-        address: 1, 
-        // how many times each ip is allowed in a window(24h),
-        // if you use proxy, double check if the req.ip returns client's ip.
-        ip: 10 
+      // how many times each wallet address is allowed in a window(24h)
+      address: 1,
+      // how many times each ip is allowed in a window(24h),
+      // if you use proxy, double check if the req.ip is return client's ip.
+      ip: 1
     }
+  },
 }
  ```
  
@@ -75,9 +85,9 @@ v16.15.0
  
  # Test
  
- visit http://localhost:80 
+ visit http://localhost:8668
  
- 80 is default, you can edit it in the config.json
+ 8668 is default, you can edit it in the config.json
  
  # Donation
 

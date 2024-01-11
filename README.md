@@ -36,7 +36,7 @@ v16.15.0
     endpoint: {
       // make sure that CORS is enabled in rpc section in config.toml
       // cors_allowed_origins = ["*"]
-      rpc_endpoint: " http://52.23.185.183:26657",
+      rpc_endpoint: " http://34.80.93.133:26657",
     },
     sender: {
       mnemonic: "wise rule method circle general over tool exhibit over group nuclear meat inform rival before short inner bind short enact team dinner swift ritual",

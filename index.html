@@ -106,7 +106,7 @@
               obj.disabled = true
               document.getElementById("button-loading").style.display = 'block';
               
-              fetch(`/send/${this.address}`).then(response => response.json()).then(data => {
+              fetch(`/send/${this.address}/${this.selectedToken}`).then(response => response.json()).then(data => {
                   // button state
                   obj.disabled = false
                   document.getElementById("button-loading").style.display = 'none';

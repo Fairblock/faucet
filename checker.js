@@ -24,13 +24,13 @@ export class FrequencyChecker {
         })
     }
 
-    async checkIp(ip, chain) {
-        const chainLimit = this.conf.blockchains.find(x => x.name === chain)
+    async checkIp(ip) {
+        const chainLimit = this.conf.blockchain
         return chainLimit ? this.check(ip, chainLimit.limit.ip ) : Promise.resolve(false)
     }
 
-    async checkAddress(address, chain) {
-        const chainLimit = this.conf.blockchains.find(x => x.name === chain)
+    async checkAddress(address) {
+        const chainLimit = this.conf.blockchain
         return chainLimit ? this.check(address, chainLimit.limit.address ) : Promise.resolve(false)
     }
 

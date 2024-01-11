@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Faucet for Cosmos SDK Blockchain</title>
-    <link rel="icon" href="https://ping.pub/favicon.ico" />
+    <title>Faucet for Fairyring Testnet</title>
+    <link rel="icon" href="https://pbs.twimg.com/profile_images/1674527932956409860/ja7Woiz6_400x400.jpg" />
     <meta name=”robots” content="index, follow">
     <meta name="description" content="Uniform Faucet Tool For Cosmos SDK Blockchains - Powered By Ping.pub">
     <meta></head>
@@ -14,17 +14,17 @@
     <div id="app">
       <main class="container-md">
         <div class="py-5 text-center">
-          <img id="logo" class="d-block mx-auto mb-4" style="max-width: 250px;" src="https://interchainnfts.dev/assets/img/banner.e3623744.png" :alt="`${testnet} Faucet`">
+          <img id="logo" class="d-block mx-auto mb-4" style="max-width: 250px;" src="https://pbs.twimg.com/profile_images/1674527932956409860/ja7Woiz6_400x400.jpg" :alt="`${testnet} Faucet`">
           <h1><span id="testnet">{{ testnet }}</span> Faucet</h1>
-          <p class="lead">Dear, Cosmonauts! <br>
+          <p class="lead">Dear, Fairies! <br>
               Welcome to {{ testnet }}! Are you looking for some tokens to start? 
           </p>
         </div>
         <div class="row g-5">
           <div class="input-group">
               <span class="input-group-text">
-                <select v-model="chain" @change="onChange()">
-                  <option v-for="c in conf.blockchains">{{c}}</option>
+                <select v-model="selectedToken" @change="onChange()">
+                  <option v-for="c in conf.tokens">{{c.denom}}</option>
                 </select>
               </span>
               <input id="address" class="form-control" :placeholder="placeholder" v-model="address" name="address">
@@ -62,7 +62,8 @@
             chain: '',
             conf: {},
             balance: {},
-            ethAddr: '0xxxx',
+            tokens: [],
+            selectedToken: {},
           }
         },
         created() {
@@ -70,7 +71,9 @@
             this.conf = data
             this.testnet = data.name
             this.logo = data.logo
-            this.chain = data.blockchains[0]
+            this.chain = data.blockchain
+            this.tokens = data.tokens
+            this.selectedToken = data.tokens[0].denom
             // this.placeholder = `Input an address (e.g.: ${data.sample[this.chain]}) to received tokens`
             this.onChange()
             if(data.deployer) {
@@ -93,7 +96,7 @@
         methods: {
           onChange() {
             this.balance = {} // reset balance
-            fetch(`/balance/${this.chain}`).then(r => r.json()).then(balance => {
+            fetch(`/balance/${this.selectedToken}`).then(r => r.json()).then(balance => {
               this.balance = balance
             })
           },
@@ -103,7 +106,7 @@
               obj.disabled = true
               document.getElementById("button-loading").style.display = 'block';
               
-              fetch(`/send/${this.chain}/${this.address}`).then(response => response.json()).then(data => {
+              fetch(`/send/${this.address}`).then(response => response.json()).then(data => {
                   // button state
                   obj.disabled = false
                   document.getElementById("button-loading").style.display = 'none';

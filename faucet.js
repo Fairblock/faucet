@@ -1,14 +1,10 @@
 import express from 'express';
 import * as path from 'path'
 
-import { Wallet } from '@ethersproject/wallet'
-import {
-  pathToString,
-} from "@cosmjs/crypto";
-
-import { DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
-import { SigningStargateClient } from "@cosmjs/stargate";
-
+import { exec } from "child_process"
+import { DirectSecp256k1Wallet } from "@cosmjs/proto-signing";
+import { StargateClient } from "@cosmjs/stargate";
+import { fromHex } from "@cosmjs/encoding"
 import conf from './config.js'
 import { FrequencyChecker } from './checker.js';
 
@@ -19,19 +15,26 @@ const app = express()
 
 const checker = new FrequencyChecker(conf)
 
+let faucetAddress = null;
+
+(async () => {
+  try {
+    const addr = await getAccountAddress()
+    faucetAddress = addr
+  } catch (err) {
+    throw new Error(err)
+  }
+})();
+
 app.get('/', (_, res) => {
   res.sendFile(path.resolve('./index.html'));
 })
 
-app.get('/config.json', async (req, res) => {
+app.get('/config.json', async (_, res) => {
   const sample = {}
   const chainConf = conf.blockchain
-  const wallet = await DirectSecp256k1HdWallet.fromMnemonic(chainConf.sender.mnemonic, chainConf.sender.option);
-  const [firstAccount] = await wallet.getAccounts();
-  sample[chainConf.name] = firstAccount.address
+  sample[chainConf.name] = faucetAddress
 
-  const wallet2 = Wallet.fromMnemonic(chainConf.sender.mnemonic, pathToString(chainConf.sender.option.hdPaths[0]));
-  console.log('address:', sample[chainConf.name], wallet2.address);
 
   const project = conf.project
   project.sample = sample
@@ -69,10 +72,8 @@ app.get('/balance/:denom', async (req, res) => {
     const chainConf = conf.blockchain
     if(chainConf) {
       const rpcEndpoint = chainConf.endpoint.rpc_endpoint;
-      const wallet = await DirectSecp256k1HdWallet.fromMnemonic(chainConf.sender.mnemonic, chainConf.sender.option);
-      const client = await SigningStargateClient.connectWithSigner(rpcEndpoint, wallet);
-      const [firstAccount] = await wallet.getAccounts();
-      await client.getBalance(firstAccount.address, chainConf.tx[index].amount.denom).then(x => {
+      const client = await StargateClient.connect(rpcEndpoint);
+      await client.getBalance(faucetAddress, chainConf.tx[index].amount.denom).then(x => {
         return balance = x
       }).catch(e => console.error(e));
     }
@@ -106,7 +107,7 @@ app.get('/send/:address/:denom', async (req, res) => {
   
   try {
     const chainConf = conf.blockchain
-    if (chainConf && address.startsWith(chainConf.sender.option.prefix)) {
+    if (chainConf && address.startsWith(chainConf.addressPrefix)) {
       if( await checker.checkAddress(address) && await checker.checkIp(`${index}${ip}`) ) {
         checker.update(`${index}${ip}`) // get ::1 on localhost
         sendCosmosTx(address, index).then(ret => {
@@ -144,25 +145,72 @@ function getIndexByDenom(denom) {
   return null
 }
 
+async function myExec(cmd) {
+  return new Promise((resolve, reject) => {
+    exec(cmd, (err, stdout, stderr) => {
+      if (err) {
+        return reject(err)
+      }
+      if (stderr) {
+        return reject(stderr)
+      }
+      return resolve(stdout.replace("\n", ""))
+    })
+  })
+}
+
+async function getAccountAddress() {
+  const chainConf = conf.blockchain
+  if(!chainConf) {
+    throw new Error(`Blockchain Config [${chain}] not found`)
+  }
+
+  if (!chainConf.sender.accountName) {
+    throw new Error(`Sender account name not found`)
+  }
+
+  if (!chainConf.sender.keyRingPass) {
+    throw new Error(`Sender keyring password not found`)
+  }
+
+  return myExec(`echo '${chainConf.sender.keyRingPass}' | fairyringd keys show ${chainConf.sender.accountName} -a`);
+}
+
+async function fairyringdBankSendTx(to, amount) {
+  const chainConf = conf.blockchain
+  if(!chainConf) {
+    throw new Error(`Blockchain Config [${chain}] not found`)
+  }
+
+  if (!chainConf.sender.accountName) {
+    throw new Error(`Sender account name not found`)
+  }
+
+  if (!chainConf.sender.keyRingPass) {
+    throw new Error(`Sender keyring password not found`)
+  }
+
+  if (!faucetAddress) {
+    throw new Error("Faucet address not found")
+  }
+
+  try {
+    const out = await myExec(`echo ${chainConf.sender.keyRingPass} | fairyringd tx bank send ${faucetAddress} ${to} ${amount} --from ${chainConf.sender.accountName} -y -o json`);
+    const jsonOut = JSON.parse(out)
+    console.dir(`${new Date().toLocaleString()} Sent ${amount} to ${to}, result: ${jsonOut}`, {depth: null})
+    return jsonOut
+  } catch (err) {
+     throw new Error(err)
+  };
+};
+
 async function sendCosmosTx(recipient, amountIndex) {
-  // const mnemonic = "surround miss nominee dream gap cross assault thank captain prosper drop duty group candy wealth weather scale put";
   const chainConf = conf.blockchain
   if(!chainConf) {
     throw new Error(`Blockchain Config [${chain}] not found`)
   }
   
-  const wallet = await DirectSecp256k1HdWallet.fromMnemonic(chainConf.sender.mnemonic, chainConf.sender.option);
-  const [firstAccount] = await wallet.getAccounts();
-
-  // console.log("sender", firstAccount);
-
-  const rpcEndpoint = chainConf.endpoint.rpc_endpoint;
-  const client = await SigningStargateClient.connectWithSigner(rpcEndpoint, wallet);
-  client.getBalance
-
-  // const recipient = "cosmos1xv9tklw7d82sezh9haa573wufgy59vmwe6xxe5";
   const tx = chainConf.tx[amountIndex];
-  const amount = tx.amount;
-  const fee = tx.fee;
-  return client.sendTokens(firstAccount.address, recipient, [amount], fee);
+  console.log("Recipient & Amount: ", recipient, `${tx.amount.amount}${tx.amount.denom}`)
+  return fairyringdBankSendTx(recipient, `${tx.amount.amount}${tx.amount.denom}`)
 }

@@ -1,6 +1,3 @@
-
-import { stringToPath } from '@cosmjs/crypto'
-
 export default {
     port: 8668, // http port
     db: {
@@ -18,29 +15,12 @@ export default {
             // cors_allowed_origins = ["*"]
             rpc_endpoint: " http://34.80.93.133:26657",
         },
+        addressPrefix: "fairy",
         sender: {
-            mnemonic: "wise rule method circle general over tool exhibit over group nuclear meat inform rival before short inner bind short enact team dinner swift ritual",
-            option: {
-                hdPaths: [stringToPath("m/44'/118'/0'/0/0")],
-                prefix: "fairy"
-            }
+           accountName: "faucet",
+           keyRingPass: "your_key_ring_password"
         },
         tx: [
-            {
-                amount: {
-                    denom: "stake",
-                    amount: "100000000000"
-                },
-                fee: {
-                    amount: [
-                        // {
-                        //     amount: "5000",
-                        //     denom: "uiris"
-                        // }
-                    ],
-                    gas: "200000"
-                },
-            },
             {
                 amount: {
                     denom: "ufairy",
@@ -50,12 +30,27 @@ export default {
                     amount: [
                         // {
                         //     amount: "5000",
-                        //     denom: "uiris"
+                        //     denom: "stake"
                         // }
                     ],
                     gas: "200000"
                 },
             },
+            {
+                amount: {
+                    denom: "stake",
+                    amount: "100000000000"
+                },
+                fee: {
+                    amount: [
+                        // {
+                        //     amount: "5000",
+                        //     denom: "stake"
+                        // }
+                    ],
+                    gas: "200000"
+                },
+            }
         ],
         limit: {
             // how many times each wallet address is allowed in a window(24h)

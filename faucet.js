@@ -197,7 +197,7 @@ async function fairyringdBankSendTx(to, amount) {
   try {
     const out = await myExec(`echo ${chainConf.sender.keyRingPass} | fairyringd tx bank send ${faucetAddress} ${to} ${amount} --from ${chainConf.sender.accountName} -y -o json`);
     const jsonOut = JSON.parse(out)
-    console.dir(`${new Date().toLocaleString()} Sent ${amount} to ${to}, result: ${jsonOut}`, {depth: null})
+    console.log(`${new Date().toLocaleString()} Sent ${amount} to ${to}, result: ${out}`)
     return jsonOut
   } catch (err) {
      throw new Error(err)

@@ -64,9 +64,6 @@
             balance: {},
             tokens: [],
             selectedToken: {},
-            rpc: "",
-            api: "",
-            prefix: "",
           }
         },
         created() {
@@ -77,50 +74,44 @@
             this.chain = data.blockchain
             this.tokens = data.tokens
             this.selectedToken = data.tokens[0].denom
-            this.rpc = data.endpoint.rpc
-            this.api = data.endpoint.api
-            this.prefix = data.prefix
 
             this.onChange()
             if(data.deployer) {
                 this.deployer = `, Hosted By ${data.deployer}`
             }
-          });
 
-          if (!window.keplr) {
-            return
-          }
-
-          window.keplr.experimentalSuggestChain({
-            chainId: this.chain,
-            rpc: this.rpc,
-            api: this.api,
-            chainName: this.testnet,
-            stakeCurrency:
-              { coinDenom: "STAKE", coinDecimals: 0, coinMinimalDenom: "stake" },
-            bip44: { coinType:118 },
-            feeCurrencies: [],
-            currencies: [
-              { coinDenom: "STAKE", coinDecimals: 0, coinMinimalDenom: "stake" },
-              { coinDenom: "UFAIRY", coinDecimals: 0, coinMinimalDenom: "fairy" },
-            ],
-            bech32Config:
-              {
-                bech32PrefixAccAddr: this.prefix,
-                bech32PrefixAccPub: this.prefix + "pub",
-                bech32PrefixValAddr: this.prefix + "valoper",
-                bech32PrefixValPub: this.prefix + "valoperpub",
-                bech32PrefixConsAddr: this.prefix + "valcons",
-                bech32PrefixConsPub: this.prefix + "valconspub",
-              },
-          })
-            .then(() => window.keplr.enable(this.chain))
-            .then(() => window.keplr.getKey(this.chain))
-            .then(result => {
-              this.address = result.bech32Address
+            if (!window.keplr) {
+              return
+            }
+            window.keplr.experimentalSuggestChain({
+              chainId: this.chain,
+              rpc: data.endpoint.rpc,
+              api: data.endpoint.api,
+              chainName: this.testnet,
+              stakeCurrency:
+                { coinDenom: "STAKE", coinDecimals: 0, coinMinimalDenom: "stake" },
+              bip44: { coinType:118 },
+              feeCurrencies: [],
+              currencies: [
+                { coinDenom: "STAKE", coinDecimals: 0, coinMinimalDenom: "stake" },
+                { coinDenom: "UFAIRY", coinDecimals: 0, coinMinimalDenom: "fairy" },
+              ],
+              bech32Config:
+                {
+                  bech32PrefixAccAddr: data.prefix,
+                  bech32PrefixAccPub: data.prefix + "pub",
+                  bech32PrefixValAddr: data.prefix + "valoper",
+                  bech32PrefixValPub: data.prefix + "valoperpub",
+                  bech32PrefixConsAddr: data.prefix + "valcons",
+                  bech32PrefixConsPub: data.prefix + "valconspub",
+                },
             })
-          .catch(err => console.error) 
-          
+              .then(() => window.keplr.enable(this.chain))
+              .then(() => window.keplr.getKey(this.chain))
+              .then(result => {
+                this.address = result.bech32Address
+              })
+          }).catch(err => console.error) 
         },
         computed: {
           placeholder() {

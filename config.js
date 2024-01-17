@@ -13,7 +13,8 @@ export default {
         endpoint: {
             // make sure that CORS is enabled in rpc section in config.toml
             // cors_allowed_origins = ["*"]
-            rpc_endpoint: " http://34.80.93.133:26657",
+            rpc: "http://34.80.93.133:26657",
+            api: "http://34.80.93.133:1317"
         },
         addressPrefix: "fairy",
         sender: {

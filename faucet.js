@@ -2,9 +2,7 @@ import express from 'express';
 import * as path from 'path'
 
 import { exec } from "child_process"
-import { DirectSecp256k1Wallet } from "@cosmjs/proto-signing";
 import { StargateClient } from "@cosmjs/stargate";
-import { fromHex } from "@cosmjs/encoding"
 import conf from './config.js'
 import { FrequencyChecker } from './checker.js';
 
@@ -46,6 +44,9 @@ app.get('/config.json', async (_, res) => {
   }
 
   project.tokens = tokens
+  project.endpoint = conf.blockchain.endpoint
+  project.prefix = conf.blockchain.addressPrefix
+
   res.send(project);
 })
 
@@ -71,7 +72,7 @@ app.get('/balance/:denom', async (req, res) => {
   try{
     const chainConf = conf.blockchain
     if(chainConf) {
-      const rpcEndpoint = chainConf.endpoint.rpc_endpoint;
+      const rpcEndpoint = chainConf.endpoint.rpc;
       const client = await StargateClient.connect(rpcEndpoint);
       await client.getBalance(faucetAddress, chainConf.tx[index].amount.denom).then(x => {
         return balance = x

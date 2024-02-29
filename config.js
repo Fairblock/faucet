@@ -25,33 +25,27 @@ export default {
             {
                 amount: {
                     denom: "ufairy",
-                    amount: "300000"
+                    amount: "3000000"
                 },
                 fee: {
-                    amount: [
-                        // {
-                        //     amount: "5000",
-                        //     denom: "stake"
-                        // }
-                    ],
+                    amount: [],
                     gas: "200000"
                 },
             },
             {
                 amount: {
                     denom: "stake",
-                    amount: "100000000000"
+                    amount: "1000000000000"
                 },
                 fee: {
-                    amount: [
-                        // {
-                        //     amount: "5000",
-                        //     denom: "stake"
-                        // }
-                    ],
+                    amount: [],
                     gas: "200000"
                 },
             }
+        ],
+        currencies: [
+            { coinDenom: "STAKE", coinDecimals: 0, coinMinimalDenom: "stake" },
+            { coinDenom: "FAIRY", coinDecimals: 6, coinMinimalDenom: "ufairy" },
         ],
         limit: {
             // how many times each wallet address is allowed in a window(24h)

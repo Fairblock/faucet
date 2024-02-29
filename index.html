@@ -24,7 +24,7 @@
           <div class="input-group">
               <span class="input-group-text">
                 <select v-model="selectedToken" @change="onChange()">
-                  <option v-for="c in conf.tokens">{{c.denom}}</option>
+                  <option v-for="c in currencies">{{c.coinDenom}}</option>
                 </select>
               </span>
               <input id="address" class="form-control" :placeholder="placeholder" v-model="address" name="address">
@@ -64,6 +64,7 @@
             balance: {},
             tokens: [],
             selectedToken: {},
+            currencies: [],
           }
         },
         created() {
@@ -73,7 +74,8 @@
             this.logo = data.logo
             this.chain = data.blockchain
             this.tokens = data.tokens
-            this.selectedToken = data.tokens[0].denom
+            this.selectedToken = data.currencies[0].coinDenom
+            this.currencies = data.currencies
 
             this.onChange()
             if(data.deployer) {
@@ -92,10 +94,7 @@
                 { coinDenom: "STAKE", coinDecimals: 0, coinMinimalDenom: "stake" },
               bip44: { coinType:118 },
               feeCurrencies: [],
-              currencies: [
-                { coinDenom: "STAKE", coinDecimals: 0, coinMinimalDenom: "stake" },
-                { coinDenom: "UFAIRY", coinDecimals: 0, coinMinimalDenom: "fairy" },
-              ],
+              currencies: this.currencies,
               bech32Config:
                 {
                   bech32PrefixAccAddr: data.prefix,
@@ -126,9 +125,21 @@
           }
         },
         methods: {
+          findSelectedTokenMinmalDenom(selectedToken) {
+            for (var i = 0; i < this.currencies.length; i++) {
+              if (this.currencies[i].coinDenom == selectedToken) {
+                return this.currencies[i].coinMinmalDenom
+              }
+              return null
+            }
+          },
           onChange() {
             this.balance = {} // reset balance
-            fetch(`/balance/${this.selectedToken}`).then(r => r.json()).then(balance => {
+            denom = findSelectedTokenMinmalDenom(this.selectedToken)
+            if (denom == null) {
+              return
+            }
+            fetch(`/balance/${denom}`).then(r => r.json()).then(balance => {
               this.balance = balance
             })
           },
@@ -137,8 +148,11 @@
               // button state
               obj.disabled = true
               document.getElementById("button-loading").style.display = 'block';
-              
-              fetch(`/send/${this.address}/${this.selectedToken}`).then(response => response.json()).then(data => {
+              denom = findSelectedTokenMinmalDenom(this.selectedToken)
+              if (denom == null) {
+                return
+              }
+              fetch(`/send/${this.address}/${denom}`).then(response => response.json()).then(data => {
                   // button state
                   obj.disabled = false
                   document.getElementById("button-loading").style.display = 'none';

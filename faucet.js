@@ -46,14 +46,14 @@ app.get('/config.json', async (_, res) => {
   project.tokens = tokens
   project.endpoint = conf.blockchain.endpoint
   project.prefix = conf.blockchain.addressPrefix
+  project.currencies = conf.blockchain.currencies
 
   res.send(project);
 })
 
 app.get('/balance/:denom', async (req, res) => {
-
+  
   const {denom} = req.params;
-
   let balance = {}
 
   if (!denom) {
@@ -68,6 +68,12 @@ app.get('/balance/:denom', async (req, res) => {
     return
   }
 
+  let currencyIndex = getIndexByMinmalDenom(denom)
+
+  if (currencyIndex == null) {
+    res.send({ result: 'currencies denom not found' });
+    return
+  }
 
   try{
     const chainConf = conf.blockchain
@@ -75,6 +81,11 @@ app.get('/balance/:denom', async (req, res) => {
       const rpcEndpoint = chainConf.endpoint.rpc;
       const client = await StargateClient.connect(rpcEndpoint);
       await client.getBalance(faucetAddress, chainConf.tx[index].amount.denom).then(x => {
+        dec = conf.blockchain.currencies[currencyIndex].coinDecimals
+        if (dec != 0) {
+          x.amount = (parseInt(x.amount) / dec).toFixed(dec)
+          x.denom = conf.blockchain.currencies[currencyIndex].coinDenom
+        }
         return balance = x
       }).catch(e => console.error(e));
     }
@@ -146,6 +157,18 @@ function getIndexByDenom(denom) {
   return null
 }
 
+function getIndexByMinmalDenom(minmalDenom) {
+  const chainConf = conf.blockchain
+
+  for ( var i = 0; i < chainConf.tx.length; i++ ) {
+    if (chainConf.currencies[i].coinMinimalDenom == minmalDenom) {
+      return i
+    }
+  } 
+
+  return null
+}
+
 async function myExec(cmd) {
   return new Promise((resolve, reject) => {
     exec(cmd, (err, stdout, stderr) => {
@@ -170,9 +193,9 @@ async function getAccountAddress() {
     throw new Error(`Sender account name not found`)
   }
 
-  if (!chainConf.sender.keyRingPass) {
-    throw new Error(`Sender keyring password not found`)
-  }
+  // if (!chainConf.sender.keyRingPass) {
+  //   throw new Error(`Sender keyring password not found`)
+  // }
 
   return myExec(`echo '${chainConf.sender.keyRingPass}' | fairyringd keys show ${chainConf.sender.accountName} -a`);
 }

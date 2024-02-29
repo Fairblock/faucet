@@ -135,7 +135,7 @@
           },
           onChange() {
             this.balance = {} // reset balance
-            denom = findSelectedTokenMinmalDenom(this.selectedToken)
+            const denom = this.findSelectedTokenMinmalDenom(this.selectedToken)
             if (denom == null) {
               return
             }
@@ -148,7 +148,7 @@
               // button state
               obj.disabled = true
               document.getElementById("button-loading").style.display = 'block';
-              denom = findSelectedTokenMinmalDenom(this.selectedToken)
+              const denom = this.findSelectedTokenMinmalDenom(this.selectedToken)
               if (denom == null) {
                 return
               }

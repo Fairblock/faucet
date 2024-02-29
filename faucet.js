@@ -83,7 +83,7 @@ app.get('/balance/:denom', async (req, res) => {
       await client.getBalance(faucetAddress, chainConf.tx[index].amount.denom).then(x => {
         const dec = conf.blockchain.currencies[currencyIndex].coinDecimals
         if (dec != 0) {
-          x.amount = (parseInt(x.amount) / dec).toFixed(dec)
+          x.amount = (parseInt(x.amount) / Math.pow(10, dec)).toFixed(dec)
           x.denom = conf.blockchain.currencies[currencyIndex].coinDenom
         }
         return balance = x

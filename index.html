@@ -125,17 +125,17 @@
           }
         },
         methods: {
-          findSelectedTokenMinmalDenom(selectedToken) {
+          findSelectedTokenMinimalDenom(selectedToken) {
             for (var i = 0; i < this.currencies.length; i++) {
               if (this.currencies[i].coinDenom == selectedToken) {
-                return this.currencies[i].coinMinmalDenom
+                return this.currencies[i].coinMinimalDenom
               }
               return null
             }
           },
           onChange() {
             this.balance = {} // reset balance
-            const denom = this.findSelectedTokenMinmalDenom(this.selectedToken)
+            const denom = this.findSelectedTokenMinimalDenom(this.selectedToken)
             if (denom == null) {
               return
             }
@@ -148,7 +148,7 @@
               // button state
               obj.disabled = true
               document.getElementById("button-loading").style.display = 'block';
-              const denom = this.findSelectedTokenMinmalDenom(this.selectedToken)
+              const denom = this.findSelectedTokenMinimalDenom(this.selectedToken)
               if (denom == null) {
                 return
               }

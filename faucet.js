@@ -68,7 +68,7 @@ app.get('/balance/:denom', async (req, res) => {
     return
   }
 
-  let currencyIndex = getIndexByMinmalDenom(denom)
+  let currencyIndex = getIndexByMinimalDenom(denom)
 
   if (currencyIndex == null) {
     res.send({ result: 'currencies denom not found' });
@@ -157,11 +157,11 @@ function getIndexByDenom(denom) {
   return null
 }
 
-function getIndexByMinmalDenom(minmalDenom) {
+function getIndexByMinimalDenom(MinimalDenom) {
   const chainConf = conf.blockchain
 
   for ( var i = 0; i < chainConf.tx.length; i++ ) {
-    if (chainConf.currencies[i].coinMinimalDenom == minmalDenom) {
+    if (chainConf.currencies[i].coinMinimalDenom == MinimalDenom) {
       return i
     }
   } 

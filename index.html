@@ -11,24 +11,24 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
   </head>
   <body>
-    <div id="app">
+    <div id="app" class="min-vh-100">
       <main class="container-md">
         <div class="py-5 text-center">
           <img id="logo" class="d-block mx-auto mb-4" style="max-width: 250px;" src="https://pbs.twimg.com/profile_images/1674527932956409860/ja7Woiz6_400x400.jpg" :alt="`${testnet} Faucet`">
-          <h1><span id="testnet">{{ testnet }}</span> Faucet</h1>
-          <p class="lead">Dear, Fairies! <br>
+          <h1 class="text-white"><span id="testnet">{{ testnet }}</span> Faucet</h1>
+          <p class="lead text-white">Dear, Fairies! <br>
               Welcome to {{ testnet }}! Are you looking for some tokens to start? 
           </p>
         </div>
         <div class="row g-5">
           <div class="input-group">
               <span class="input-group-text">
-                <select v-model="selectedToken" @change="onChange()">
+                <select v-model="selectedToken" @change="onChange()" class="border-0" style="background-color: #e9ecef; outline: none; cursor: pointer;">
                   <option v-for="c in currencies">{{c.coinDenom}}</option>
                 </select>
               </span>
               <input id="address" class="form-control" :placeholder="placeholder" v-model="address" name="address">
-              <button type="button" class="btn btn-secondary d-flex flex-row " @click="requestToken(this)">
+              <button type="button" class="btn btn-primary d-flex flex-row " @click="requestToken(this)">
                 <span>
                   <span id="button-loading" class="spinner-border spinner-border-sm mt-1 mr-1" style="display:none" role="status" aria-hidden="true"></span>
                 </span>
@@ -42,11 +42,14 @@
       </main>
     
       <footer class="my-5 pt-5 text-muted text-center text-small">
-        <p class="my-2"> Faucet Address: {{ faucet }}, <br> Balance: {{ balance.amount }} {{balance.denom}}</p>
-        <p class="mb-1">&copy; 2022 Built By <a href="https://ping.pub">Ping.pub</a><span id="deployer" v-html="deployer"></span></p>
-        <ul class="list-inline">
+        <p class="my-2 text-white"> Faucet Address: {{ faucet }}, <br> Balance: {{ balance.amount }} {{balance.denom}}</p>
+        <p class="mb-1 text-white">
+          <!-- &copy; 2022 Built By <a href="https://ping.pub">Ping.pub</a> -->
+          <span id="deployer" v-html="deployer"></span>
+        </p>
+        <!-- <ul class="list-inline">
           <li class="list-inline-item"><a href="https://github.com/ping-pub/faucet.git">Deploy a new instance?</a></li>
-        </ul>
+        </ul> -->
       </footer>
     </div>
     <script type="module">
@@ -79,7 +82,7 @@
 
             this.onChange()
             if(data.deployer) {
-                this.deployer = `, Hosted By ${data.deployer}`
+                this.deployer = `Hosted By ${data.deployer}`
             }
 
             if (!window.keplr) {
@@ -123,6 +126,18 @@
           faucet() {
             return this.conf.sample? this.conf.sample[this.chain] : ''
           }
+        },
+        mounted() {
+          VANTA.BIRDS({
+          el: "#app",
+          mouseControls: true,
+          touchControls: true,
+          gyroControls: false,
+          minHeight: 200.00,
+          minWidth: 200.00,
+          scale: 1.00,
+          scaleMobile: 1.00
+        })
         },
         methods: {
           findSelectedTokenMinimalDenom(selectedToken) {
@@ -174,7 +189,7 @@
     </script>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
-    <script>
-    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vanta@0.5.24/dist/vanta.birds.min.js"></script>
   </body>
 </html>

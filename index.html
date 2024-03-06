@@ -1,180 +1,655 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Faucet for FairyRing Testnet</title>
-    <link rel="icon" href="https://pbs.twimg.com/profile_images/1674527932956409860/ja7Woiz6_400x400.jpg" />
-    <meta name=”robots” content="index, follow">
-    <meta name="description" content="Uniform Faucet Tool For Cosmos SDK Blockchains - Powered By Ping.pub">
-    <meta></head>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <link
+      rel="icon"
+      href="https://pbs.twimg.com/profile_images/1674527932956409860/ja7Woiz6_400x400.jpg"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&display=swap"
+      rel="stylesheet"
+    />
+    <meta name="”robots”" content="index, follow" />
+    <meta name="description" content="Faucet for FairyRing" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi"
+      crossorigin="anonymous"
+    />
+    <style>
+      body {
+        font-family: "EB Garamond", serif;
+        background: linear-gradient(to left, #393975, #1e1e2e);
+      }
+
+      #deployer a {
+        text-decoration: none;
+        color: #648dff;
+      }
+
+      #deployer a:hover {
+        color: #3764e1;
+      }
+
+      .fairblock-bg {
+        background-color: #648dff;
+      }
+
+      .fairblock-bg:hover {
+        background-color: #3764e1;
+      }
+
+      /* .area {
+        background: #4e54c8;
+        background: -webkit-linear-gradient(to left, #8f94fb, #4e54c8);
+        width: 100%;
+        height: 100vh;
+      } */
+
+      .circles {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        pointer-events: none;
+      }
+
+      .circles li {
+        position: absolute;
+        display: block;
+        list-style: none;
+        width: 20px;
+        height: 20px;
+        background: rgba(59, 99, 244, 0.2);
+        animation: animate 25s linear infinite;
+        bottom: -150px;
+      }
+
+      .circles li:nth-child(1) {
+        left: 25%;
+        width: 80px;
+        height: 80px;
+        animation-delay: 0s;
+      }
+
+      .circles li:nth-child(2) {
+        left: 10%;
+        width: 20px;
+        height: 20px;
+        animation-delay: 2s;
+        animation-duration: 12s;
+      }
+
+      .circles li:nth-child(3) {
+        left: 70%;
+        width: 20px;
+        height: 20px;
+        animation-delay: 4s;
+      }
+
+      .circles li:nth-child(4) {
+        left: 40%;
+        width: 60px;
+        height: 60px;
+        animation-delay: 0s;
+        animation-duration: 18s;
+      }
+
+      .circles li:nth-child(5) {
+        left: 65%;
+        width: 20px;
+        height: 20px;
+        animation-delay: 0s;
+      }
+
+      .circles li:nth-child(6) {
+        left: 75%;
+        width: 110px;
+        height: 110px;
+        animation-delay: 3s;
+      }
+
+      .circles li:nth-child(7) {
+        left: 35%;
+        width: 150px;
+        height: 150px;
+        animation-delay: 7s;
+      }
+
+      .circles li:nth-child(8) {
+        left: 50%;
+        width: 25px;
+        height: 25px;
+        animation-delay: 15s;
+        animation-duration: 45s;
+      }
+
+      .circles li:nth-child(9) {
+        left: 20%;
+        width: 15px;
+        height: 15px;
+        animation-delay: 2s;
+        animation-duration: 35s;
+      }
+
+      .circles li:nth-child(10) {
+        left: 85%;
+        width: 150px;
+        height: 150px;
+        animation-delay: 0s;
+        animation-duration: 11s;
+      }
+
+      @keyframes animate {
+        0% {
+          transform: translateY(0) rotate(0deg);
+          opacity: 1;
+          border-radius: 0;
+        }
+
+        100% {
+          transform: translateY(-1000px) rotate(720deg);
+          opacity: 0;
+          border-radius: 50%;
+        }
+      }
+
+      .cat {
+        position: relative;
+        height: 170px;
+        width: 192.1px;
+      }
+
+      .ear {
+        position: absolute;
+        top: -30%;
+        height: 60%;
+        width: 25%;
+        background: #fff;
+      }
+      .ear::before,
+      .ear::after {
+        content: "";
+        position: absolute;
+        bottom: 24%;
+        height: 10%;
+        width: 5%;
+        border-radius: 50%;
+        background: #161616;
+      }
+      .ear::after {
+        transform-origin: 50% 100%;
+      }
+
+      .ear--left {
+        left: -7%;
+        border-radius: 70% 30% 0% 0%/100% 100% 0% 0%;
+        transform: rotate(-15deg);
+      }
+      .ear--left::before,
+      .ear--left::after {
+        right: 10%;
+      }
+      .ear--left::after {
+        transform: rotate(-45deg);
+      }
+
+      .ear--right {
+        right: -7%;
+        border-radius: 30% 70% 0% 0%/100% 100% 0% 0%;
+        transform: rotate(15deg);
+      }
+      .ear--right::before,
+      .ear--right::after {
+        left: 10%;
+      }
+      .ear--right::after {
+        transform: rotate(45deg);
+      }
+
+      .face {
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        background: #161616;
+        border-radius: 50%;
+      }
+
+      .eye {
+        position: absolute;
+        top: 35%;
+        height: 30%;
+        width: 31%;
+        background: #fff;
+        border-radius: 50% 50% 50% 50%/60% 60% 40% 40%;
+      }
+      .eye::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 0;
+        width: 100%;
+        border-radius: 0 0 50% 50%/0 0 40% 40%;
+        background: #161616;
+        -webkit-animation: blink 4s infinite ease-in;
+        animation: blink 4s infinite ease-in;
+      }
+      @-webkit-keyframes blink {
+        0% {
+          height: 0;
+        }
+        90% {
+          height: 0;
+        }
+        92.5% {
+          height: 100%;
+        }
+        95% {
+          height: 0;
+        }
+        97.5% {
+          height: 100%;
+        }
+        100% {
+          height: 0;
+        }
+      }
+      @keyframes blink {
+        0% {
+          height: 0;
+        }
+        90% {
+          height: 0;
+        }
+        92.5% {
+          height: 100%;
+        }
+        95% {
+          height: 0;
+        }
+        97.5% {
+          height: 100%;
+        }
+        100% {
+          height: 0;
+        }
+      }
+      .eye::before {
+        content: "";
+        position: absolute;
+        top: 60%;
+        height: 10%;
+        width: 15%;
+        background: #fff;
+        border-radius: 50%;
+      }
+
+      .eye--left {
+        left: 0;
+      }
+      .eye--left::before {
+        right: -5%;
+      }
+
+      .eye--right {
+        right: 0;
+      }
+      .eye--right::before {
+        left: -5%;
+      }
+
+      .eye-pupil {
+        position: absolute;
+        top: 25%;
+        height: 50%;
+        width: 20%;
+        background: #161616;
+        border-radius: 50%;
+        -webkit-animation: look-around 4s infinite;
+        animation: look-around 4s infinite;
+      }
+      @-webkit-keyframes look-around {
+        0% {
+          transform: translate(0);
+        }
+        5% {
+          transform: translate(50%, -25%);
+        }
+        10% {
+          transform: translate(50%, -25%);
+        }
+        15% {
+          transform: translate(-100%, -25%);
+        }
+        20% {
+          transform: translate(-100%, -25%);
+        }
+        25% {
+          transform: translate(0, 0);
+        }
+        100% {
+          transform: translate(0, 0);
+        }
+      }
+      @keyframes look-around {
+        0% {
+          transform: translate(0);
+        }
+        5% {
+          transform: translate(50%, -25%);
+        }
+        10% {
+          transform: translate(50%, -25%);
+        }
+        15% {
+          transform: translate(-100%, -25%);
+        }
+        20% {
+          transform: translate(-100%, -25%);
+        }
+        25% {
+          transform: translate(0, 0);
+        }
+        100% {
+          transform: translate(0, 0);
+        }
+      }
+      .eye--left .eye-pupil {
+        right: 30%;
+      }
+      .eye--right .eye-pupil {
+        left: 30%;
+      }
+      .eye-pupil::after {
+        content: "";
+        position: absolute;
+        top: 30%;
+        right: -5%;
+        height: 20%;
+        width: 35%;
+        border-radius: 50%;
+        background: #fff;
+      }
+
+      .muzzle {
+        position: absolute;
+        top: 60%;
+        left: 50%;
+        height: 6%;
+        width: 10%;
+        background: #fff;
+        transform: translateX(-50%);
+        border-radius: 50% 50% 50% 50%/30% 30% 70% 70%;
+      }
+    </style>
   </head>
   <body>
-    <div id="app">
+    <div id="app" class="min-vh-100">
+      <div class="area">
+        <ul class="circles">
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+        </ul>
+      </div>
       <main class="container-md">
+        <div
+          style="position: absolute; bottom: 10%; left: 100px; opacity: 0.01"
+        >
+          <div class="cat">
+            <div class="ear ear--left"></div>
+            <div class="ear ear--right"></div>
+            <div class="face">
+              <div class="eye eye--left">
+                <div class="eye-pupil"></div>
+              </div>
+              <div class="eye eye--right">
+                <div class="eye-pupil"></div>
+              </div>
+              <div class="muzzle"></div>
+            </div>
+          </div>
+        </div>
         <div class="py-5 text-center">
-          <img id="logo" class="d-block mx-auto mb-4" style="max-width: 250px;" src="https://pbs.twimg.com/profile_images/1674527932956409860/ja7Woiz6_400x400.jpg" :alt="`${testnet} Faucet`">
-          <h1><span id="testnet">{{ testnet }}</span> Faucet</h1>
-          <p class="lead">Dear, Fairies! <br>
-              Welcome to {{ testnet }}! Are you looking for some tokens to start? 
+          <img
+            id="logo"
+            class="d-block mx-auto mb-4 mt-5"
+            style="max-width: 250px"
+            src="https://raw.githubusercontent.com/Fairblock/assets/main/logo/white.svg"
+            :alt="`${testnet} Faucet`"
+          />
+          <h1 class="text-white">
+            <span id="testnet">{{ testnet }}</span> Faucet
+          </h1>
+          <p class="lead text-white">
+            Welcome to {{ testnet }}! Are you looking for some tokens to start?
           </p>
         </div>
         <div class="row g-5">
           <div class="input-group">
-              <span class="input-group-text">
-                <select v-model="selectedToken" @change="onChange()">
-                  <option v-for="c in currencies">{{c.coinDenom}}</option>
-                </select>
+            <span class="input-group-text">
+              <select
+                v-model="selectedToken"
+                @change="onChange()"
+                class="border-0"
+                style="
+                  background-color: #e9ecef;
+                  outline: none;
+                  cursor: pointer;
+                "
+              >
+                <option v-for="c in currencies">{{c.coinDenom}}</option>
+              </select>
+            </span>
+            <input
+              id="address"
+              class="form-control"
+              :placeholder="placeholder"
+              v-model="address"
+              name="address"
+            />
+            <button
+              type="button"
+              class="btn btn-primary d-flex flex-row fairblock-bg"
+              @click="requestToken(this)"
+            >
+              <span>
+                <span
+                  id="button-loading"
+                  class="spinner-border spinner-border-sm mt-1 mr-1"
+                  style="display: none"
+                  role="status"
+                  aria-hidden="true"
+                ></span>
               </span>
-              <input id="address" class="form-control" :placeholder="placeholder" v-model="address" name="address">
-              <button type="button" class="btn btn-secondary d-flex flex-row " @click="requestToken(this)">
-                <span>
-                  <span id="button-loading" class="spinner-border spinner-border-sm mt-1 mr-1" style="display:none" role="status" aria-hidden="true"></span>
-                </span>
-               <span class="sr-only">Request Token</span>
-              </button>
+              <span class="sr-only">Request Token</span>
+            </button>
           </div>
         </div>
-  
+
         <div id="message" v-html="message"></div>
-  
       </main>
-    
+
       <footer class="my-5 pt-5 text-muted text-center text-small">
-        <p class="my-2"> Faucet Address: {{ faucet }}, <br> Balance: {{ balance.amount }} {{balance.denom}}</p>
-        <p class="mb-1">&copy; 2022 Built By <a href="https://ping.pub">Ping.pub</a><span id="deployer" v-html="deployer"></span></p>
-        <ul class="list-inline">
-          <li class="list-inline-item"><a href="https://github.com/ping-pub/faucet.git">Deploy a new instance?</a></li>
-        </ul>
+        <p class="my-2 text-white">
+          Faucet Address: {{ faucet }}, <br />
+          Balance: {{ balance.amount }} {{balance.denom}}
+        </p>
+        <p class="mb-1 text-white">
+          <span id="deployer" v-html="deployer"></span>
+        </p>
       </footer>
     </div>
     <script type="module">
-      import { createApp } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js'
+      import { createApp } from "https://unpkg.com/vue@3/dist/vue.esm-browser.js";
       createApp({
         data() {
           return {
-            message: '',
-            testnet: 'FairyRing Testnet',
-            logo: 'https://pbs.twimg.com/profile_images/1674527932956409860/ja7Woiz6_400x400.jpg',
-            deployer: '',
-            address: '',
-            chain: '',
+            message: "",
+            testnet: "FairyRing Testnet",
+            logo: "https://pbs.twimg.com/profile_images/1674527932956409860/ja7Woiz6_400x400.jpg",
+            deployer: "",
+            address: "",
+            chain: "",
             conf: {},
             balance: {},
             tokens: [],
             selectedToken: {},
             currencies: [],
-          }
+          };
         },
         created() {
-          fetch("/config.json").then(response => response.json()).then(data => {
-            this.conf = data
-            this.testnet = data.name
-            this.logo = data.logo
-            this.chain = data.blockchain
-            this.tokens = data.tokens
-            this.selectedToken = data.currencies[0].coinDenom
-            this.currencies = data.currencies
+          fetch("/config.json")
+            .then((response) => response.json())
+            .then((data) => {
+              this.conf = data;
+              this.testnet = data.name;
+              this.logo = data.logo;
+              this.chain = data.blockchain;
+              this.tokens = data.tokens;
+              this.selectedToken = data.currencies[0].coinDenom;
+              this.currencies = data.currencies;
 
-            this.onChange()
-            if(data.deployer) {
-                this.deployer = `, Hosted By ${data.deployer}`
-            }
+              this.onChange();
+              if (data.deployer) {
+                this.deployer = `Hosted By ${data.deployer}`;
+              }
 
-            if (!window.keplr) {
-              return
-            }
-            window.keplr.experimentalSuggestChain({
-              chainId: this.chain,
-              rpc: data.endpoint.rpc,
-              api: data.endpoint.api,
-              chainName: this.testnet,
-              stakeCurrency:
-                { coinDenom: "STAKE", coinDecimals: 0, coinMinimalDenom: "stake" },
-              bip44: { coinType:118 },
-              feeCurrencies: [],
-              currencies: this.currencies,
-              bech32Config:
-                {
-                  bech32PrefixAccAddr: data.prefix,
-                  bech32PrefixAccPub: data.prefix + "pub",
-                  bech32PrefixValAddr: data.prefix + "valoper",
-                  bech32PrefixValPub: data.prefix + "valoperpub",
-                  bech32PrefixConsAddr: data.prefix + "valcons",
-                  bech32PrefixConsPub: data.prefix + "valconspub",
-                },
+              if (!window.keplr) {
+                return;
+              }
+              window.keplr
+                .experimentalSuggestChain({
+                  chainId: this.chain,
+                  rpc: data.endpoint.rpc,
+                  api: data.endpoint.api,
+                  chainName: this.testnet,
+                  stakeCurrency: {
+                    coinDenom: "STAKE",
+                    coinDecimals: 0,
+                    coinMinimalDenom: "stake",
+                  },
+                  bip44: { coinType: 118 },
+                  feeCurrencies: [],
+                  currencies: this.currencies,
+                  bech32Config: {
+                    bech32PrefixAccAddr: data.prefix,
+                    bech32PrefixAccPub: data.prefix + "pub",
+                    bech32PrefixValAddr: data.prefix + "valoper",
+                    bech32PrefixValPub: data.prefix + "valoperpub",
+                    bech32PrefixConsAddr: data.prefix + "valcons",
+                    bech32PrefixConsPub: data.prefix + "valconspub",
+                  },
+                })
+                .then(() => window.keplr.enable(this.chain))
+                .then(() => window.keplr.getKey(this.chain))
+                .then((result) => {
+                  this.address = result.bech32Address;
+                });
             })
-              .then(() => window.keplr.enable(this.chain))
-              .then(() => window.keplr.getKey(this.chain))
-              .then(result => {
-                this.address = result.bech32Address
-              })
-          }).catch(err => console.error) 
+            .catch((err) => console.error);
         },
         computed: {
           placeholder() {
-            if(this.conf.sample) {
-              return `Input an address (e.g.: ${this.conf.sample[this.chain]}) to received tokens`
+            if (this.conf.sample) {
+              return `Input an address (e.g.: ${
+                this.conf.sample[this.chain]
+              }) to received tokens`;
             } else {
-              return 'Input an address to received tokens'
+              return "Input an address to received tokens";
             }
           },
           faucet() {
-            return this.conf.sample? this.conf.sample[this.chain] : ''
-          }
+            return this.conf.sample ? this.conf.sample[this.chain] : "";
+          },
         },
         methods: {
           findSelectedTokenMinimalDenom(selectedToken) {
             for (var i = 0; i < this.currencies.length; i++) {
               if (this.currencies[i].coinDenom == selectedToken) {
-                return this.currencies[i].coinMinimalDenom
+                return this.currencies[i].coinMinimalDenom;
               }
             }
-            return null
+            return null;
           },
           onChange() {
-            this.balance = {} // reset balance
-            const denom = this.findSelectedTokenMinimalDenom(this.selectedToken)
+            this.balance = {}; // reset balance
+            const denom = this.findSelectedTokenMinimalDenom(
+              this.selectedToken
+            );
             if (denom == null) {
-              return
+              return;
             }
-            fetch(`/balance/${denom}`).then(r => r.json()).then(balance => {
-              this.balance = balance
-            })
+            fetch(`/balance/${denom}`)
+              .then((r) => r.json())
+              .then((balance) => {
+                this.balance = balance;
+              });
           },
           requestToken(obj) {
             if (this.address) {
               // button state
-              obj.disabled = true
-              document.getElementById("button-loading").style.display = 'block';
-              const denom = this.findSelectedTokenMinimalDenom(this.selectedToken)
+              obj.disabled = true;
+              document.getElementById("button-loading").style.display = "block";
+              const denom = this.findSelectedTokenMinimalDenom(
+                this.selectedToken
+              );
               if (denom == null) {
-                return
+                return;
               }
-              fetch(`/send/${this.address}/${denom}`).then(response => response.json()).then(data => {
+              fetch(`/send/${this.address}/${denom}`)
+                .then((response) => response.json())
+                .then((data) => {
                   // button state
-                  obj.disabled = false
-                  document.getElementById("button-loading").style.display = 'none';
+                  obj.disabled = false;
+                  document.getElementById("button-loading").style.display =
+                    "none";
                   // show result
                   this.message = `
-                  <div class="alert alert-${data.result.code ===0? 'success': 'danger'} alert-dismissible show fade mt-2" role="alert">
-                      <li>${data.result.code ===0? 'Token sent': 'Request failed'}</li>
-                      <textarea class="form-control mt-1" rows="5" style="background-color:transparent">${JSON.stringify(data, null, 2)}</textarea>
+                  <div class="alert alert-${
+                    data.result.code === 0 ? "success" : "danger"
+                  } alert-dismissible show fade mt-2" role="alert">
+                      <li>${
+                        data.result.code === 0 ? "Token sent" : "Request failed"
+                      }</li>
+                      <textarea class="form-control mt-1" rows="5" style="background-color:transparent">${JSON.stringify(
+                        data,
+                        null,
+                        2
+                      )}</textarea>
                       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                   </div>
-                  `
-              });
+                  `;
+                });
             } else {
-                this.message = '<span class="text-danger">Address is required</span>'
+              this.message =
+                '<span class="text-danger">Address is required</span>';
             }
-          }
-        }
-      }).mount('#app')
+          },
+        },
+      }).mount("#app");
     </script>
-    
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
-    <script>
-    </script>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
+      crossorigin="anonymous"
+    ></script>
   </body>
 </html>

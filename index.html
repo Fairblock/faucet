@@ -472,7 +472,7 @@
               <span>
                 <span
                   id="button-loading"
-                  class="spinner-border spinner-border-sm mt-1 mr-1"
+                  class="spinner-border spinner-border-sm mt-1 me-2"
                   style="display: none"
                   role="status"
                   aria-hidden="true"
@@ -484,11 +484,17 @@
         </div>
 
         <div id="message" v-html="message"></div>
+
+        <div class="pt-5 text-center text-white">
+          This is NOT an incentivized testnet, please DO NOT farm tokens. You
+          can get tokens once every 24 hours.
+        </div>
       </main>
 
       <footer class="my-5 pt-5 text-muted text-center text-small">
         <p class="my-2 text-white">
-          Faucet Address: {{ faucet }}, <br />
+          Faucet Address: {{ faucet }}
+          <br />
           Balance: {{ balance.amount }} {{balance.denom}}
         </p>
         <p class="mb-1 text-white">

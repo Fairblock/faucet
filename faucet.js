@@ -10,7 +10,14 @@ import { FrequencyChecker } from './checker.js';
 console.log("loaded config: ", conf)
 
 const app = express()
-
+app.use(express.static(path.resolve('.'), {
+  setHeaders: (res, p) => {
+    if (p.endsWith('.mp4')) {
+      res.type('video/mp4');          // ensure correct MIME
+      res.set('Accept-Ranges', 'bytes');
+    }
+  }
+}));
 const checker = new FrequencyChecker(conf)
 
 let faucetAddress = null;
@@ -219,7 +226,7 @@ async function fairyringdBankSendTx(to, amount) {
   }
 
   try {
-    const out = await myExec(`echo ${chainConf.sender.keyRingPass} | fairyringd tx bank send ${faucetAddress} ${to} ${amount} --from ${chainConf.sender.accountName} -y -o json`);
+    const out = await myExec(`echo ${chainConf.sender.keyRingPass} | fairyringd tx bank send ${faucetAddress} ${to} ${amount} --from ${chainConf.sender.accountName} --node ${chainConf.endpoint.rpc} --chain-id ${chainConf.name} -y -o json`);
     const jsonOut = JSON.parse(out)
     console.log(`${new Date().toLocaleString()} Sent ${amount} to ${to}, result: ${out}`)
     return jsonOut

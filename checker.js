@@ -1,6 +1,7 @@
 import { Level } from "level";
 
-const WINDOW = 86400 * 1000 // milliseconds in a day
+// const WINDOW = 86400 * 1000 // milliseconds in a day
+const WINDOW = 3600 * 1000 // milliseconds in an hour
 // const WINDOW = 20 * 1000 // 20s for test
 
 export class FrequencyChecker {

@@ -1,418 +1,404 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <!-- ───────── meta & fonts ─────────────────────────────────────────── -->
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Faucet for FairyRing Testnet</title>
-    <link
-      rel="icon"
-      href="https://pbs.twimg.com/profile_images/1674527932956409860/ja7Woiz6_400x400.jpg"
-    />
+    <title>Fairing Faucet – FairyRing Testnet</title>
+
+    <link rel="icon" href="https://raw.githubusercontent.com/Fairblock/assets/main/logo/icon.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;600;800&display=swap"
       rel="stylesheet"
     />
-    <meta name="”robots”" content="index, follow" />
+    <meta name="robots" content="index,follow" />
     <meta name="description" content="Faucet for FairyRing" />
+
+    <!-- ───────── bootstrap css ────────────────────────────────────────── -->
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"
       rel="stylesheet"
       integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi"
       crossorigin="anonymous"
     />
+
+    <!-- ───────── custom styles ────────────────────────────────────────── -->
     <style>
+      /* ░░░ global backdrop: video if available, gradient fallback ░░░ */
       body {
-        font-family: "EB Garamond", serif;
-        background: linear-gradient(to left, #393975, #1e1e2e);
+        font-family: 'EB Garamond', serif;
+        color: #e2e8f0;
+        /* fallback gradient for browsers that don’t play / find the video */
+        background: radial-gradient(circle at 50% 30%, #bcc4d4 0%, #4d5869 100%);
+        min-height: 100vh;
       }
-
-      #deployer a {
-        text-decoration: none;
-        color: #648dff;
+      .glass h1 {
+        color: #46A2FF;
       }
-
-      #deployer a:hover {
-        color: #3764e1;
+      .alert-danger textarea.form-control {
+        color: #0d0d0d !important;       /* dark text */
+        background-color: rgba(255,255,255,0.20) !important;  /* slight white tint */
+        border-color: rgba(0,0,0,0.15) !important;
       }
-
-      .fairblock-bg {
-        background-color: #648dff;
+      .alert-success textarea.form-control {
+        /* keep the alert-green background, only tweak the textarea */
+        color: #0d0d0d !important;                 /* dark text */
+        background-color: rgba(255,255,255,0.20) !important; /* translucent white */
+        border-color: rgba(0,0,0,0.15) !important; /* subtle dark border */
       }
-
-      .fairblock-bg:hover {
-        background-color: #3764e1;
-      }
-
-      /* .area {
-        background: #4e54c8;
-        background: -webkit-linear-gradient(to left, #8f94fb, #4e54c8);
-        width: 100%;
-        height: 100vh;
-      } */
-
-      .circles {
-        position: absolute;
-        top: 0;
-        left: 0;
+      #bg-video {
+        position: fixed;
+        inset: 0;
         width: 100%;
         height: 100%;
-        overflow: hidden;
-        pointer-events: none;
+        object-fit: cover;
+        z-index: -2;
+        /* hide broken video icon in Firefox if the src is wrong */
+        background: transparent;
       }
 
-      .circles li {
-        position: absolute;
-        display: block;
-        list-style: none;
-        width: 20px;
-        height: 20px;
-        background: rgba(59, 99, 244, 0.2);
-        animation: animate 25s linear infinite;
-        bottom: -150px;
+      .vignette {
+        position: fixed;
+        inset: 0;
+        background: radial-gradient(
+          circle at 50% 30%,
+          rgba(0, 25, 56, 0) 0%,
+          rgba(0, 25, 56, 0.4) 60%,
+          rgba(0, 15, 35, 0.85) 100%
+        );
+        z-index: -1;
       }
 
-      .circles li:nth-child(1) {
-        left: 25%;
-        width: 80px;
-        height: 80px;
-        animation-delay: 0s;
+      /* ░░░ typography ░░░ */
+      h1 { font-size: 3.5rem; font-weight: 800; }
+      .lead { font-size: 1.25rem; }
+
+      /* ░░░ nav buttons ░░░ */
+      .quick-links a { font-weight: 600; letter-spacing: 0.02em; }
+      .btn-faq  { background:#fff;     color:#0d0d0d; }
+      .btn-docs { background:#46a2ff; color:#fff; }
+      .btn-faq:hover  { background:#d9d9d9; color:#0d0d0d; }
+      .btn-docs:hover { background:#1f83f5; color:#fff; }
+
+      /* ░░░ glass panel (with graceful fallback) ░░░ */
+      .glass {
+        border-radius: 0.75rem;
+        padding: 3.5rem 2rem 4rem;
+        border: 1px solid rgba(255,255,255,0.05);
+        background: rgba(8,14,29,0.55);           /* fallback colour */
       }
-
-      .circles li:nth-child(2) {
-        left: 10%;
-        width: 20px;
-        height: 20px;
-        animation-delay: 2s;
-        animation-duration: 12s;
-      }
-
-      .circles li:nth-child(3) {
-        left: 70%;
-        width: 20px;
-        height: 20px;
-        animation-delay: 4s;
-      }
-
-      .circles li:nth-child(4) {
-        left: 40%;
-        width: 60px;
-        height: 60px;
-        animation-delay: 0s;
-        animation-duration: 18s;
-      }
-
-      .circles li:nth-child(5) {
-        left: 65%;
-        width: 20px;
-        height: 20px;
-        animation-delay: 0s;
-      }
-
-      .circles li:nth-child(6) {
-        left: 75%;
-        width: 110px;
-        height: 110px;
-        animation-delay: 3s;
-      }
-
-      .circles li:nth-child(7) {
-        left: 35%;
-        width: 150px;
-        height: 150px;
-        animation-delay: 7s;
-      }
-
-      .circles li:nth-child(8) {
-        left: 50%;
-        width: 25px;
-        height: 25px;
-        animation-delay: 15s;
-        animation-duration: 45s;
-      }
-
-      .circles li:nth-child(9) {
-        left: 20%;
-        width: 15px;
-        height: 15px;
-        animation-delay: 2s;
-        animation-duration: 35s;
-      }
-
-      .circles li:nth-child(10) {
-        left: 85%;
-        width: 150px;
-        height: 150px;
-        animation-delay: 0s;
-        animation-duration: 11s;
-      }
-
-      @keyframes animate {
-        0% {
-          transform: translateY(0) rotate(0deg);
-          opacity: 1;
-          border-radius: 0;
-        }
-
-        100% {
-          transform: translateY(-1000px) rotate(720deg);
-          opacity: 0;
-          border-radius: 50%;
+      @supports (backdrop-filter: blur(10px)) or (-webkit-backdrop-filter: blur(10px)) {
+        .glass {
+          backdrop-filter: blur(10px) brightness(1.05);
+          -webkit-backdrop-filter: blur(10px) brightness(1.05);
         }
       }
+
+      .glass .form-control,
+      .glass .input-group-text,
+      .glass select {
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,255,255,0.08);
+        color:#e2e8f0;
+      }
+      .glass .btn-primary {
+        background:#46a2ff; border:none;
+        font-weight:700; padding-inline:2rem;
+      }
+      .glass .btn-primary:hover { background:#1f83f5; }
+
+      /* ░░░ footer socials ░░░ */
+      .social a {
+        display:inline-flex; width:44px; height:44px;
+        align-items:center; justify-content:center;
+        border-radius:50%; background:rgba(255,255,255,0.05);
+        color:#e2e8f0; margin:0 6px; transition:background .2s;
+      }
+      .social a:hover { background:rgba(255,255,255,0.15); text-decoration:none; }
     </style>
   </head>
+
   <body>
-    <div id="app" class="min-vh-100">
-      <div class="text-center py-1" style="background-color: rgb(39, 116, 210); color: white;">
+    <!-- ░░░ video bg ░░░ -->
+    <video id="bg-video" autoplay muted loop playsinline preload="auto" crossorigin="anonymous">
+      <source src="bg-animation-loop.mp4" type="video/mp4">
+    </video>
+    <div class="vignette"></div>
+
+    <!-- ░░░ Vue root ░░░ -->
+    <div id="app" class="d-flex flex-column min-vh-100">
+      <!-- notice bar -->
+      <div class="text-center py-1" style="background:#2774d2;">
         We're experiencing a very high demand, please try again later if the faucet is not working for you.
       </div>
-      <div class="area">
-        <ul class="circles">
-          <li></li>
-          <li></li>
-          <li></li>
-          <li></li>
-          <li></li>
-          <li></li>
-          <li></li>
-          <li></li>
-          <li></li>
-          <li></li>
-        </ul>
-      </div>
-      <main class="container-md">
-        <div class="py-5 text-center">
-          <img
-            id="logo"
-            class="d-block mx-auto mb-4 mt-5"
-            style="max-width: 250px"
-            src="https://raw.githubusercontent.com/Fairblock/assets/main/logo/white.svg"
-            :alt="`${testnet} Faucet`"
-          />
-          <h1 class="text-white">
-            <span id="testnet">{{ testnet }}</span> Faucet
-          </h1>
-          <p class="lead text-white">
-            Welcome to {{ testnet }}! Are you looking for some tokens to start?
-          </p>
+
+      <!-- header -->
+      <header class="container-xl py-4 d-flex justify-content-between align-items-center">
+        <img
+          src="https://file.notion.so/f/f/06eb8ba9-0030-4f78-b149-5d4d0a26f1ec/3dde543b-d180-4f9b-ac3c-cfb412f0328c/White_logo.png?table=block&id=1b944281-1c93-80ee-bee2-e49074846932&spaceId=06eb8ba9-0030-4f78-b149-5d4d0a26f1ec&expirationTimestamp=1752292800000&signature=YmTFplw789ZgUzbu6IfOGBtS_ESK2K1HPQeoUvzeCtw&downloadName=White_logo.png"
+          alt="Fairblock"
+          style="width:320px"
+        />
+        <div class="quick-links d-flex gap-3">
+            <!-- opens the new modal instead of toggling a banner -->
+  <button
+    type="button"
+    class="btn btn-faq px-4 py-2"
+    data-bs-toggle="modal"
+    data-bs-target="#howItWorksModal"
+  >
+    How it works
+  </button>
+          <a href="https://docs.fairblock.network/docs/welcome/Vision" class="btn btn-docs px-4 py-2">Docs</a>
         </div>
-        <div class="row g-5">
-          <div class="input-group">
-            <span class="input-group-text">
+      </header>
+
+      <!-- main panel -->
+      <main class="container-xl flex-grow-1 d-flex flex-column align-items-center justify-content-center">
+        <section class="glass col-12 col-lg-8 col-xl-6">
+          <h1 class="text-center mb-3">Fairblock Faucet</h1>
+          <p class="lead text-center mb-5">
+            Bootstrap your testnet wallet
+          </p>
+
+          <div class="input-group mb-4">
+            <span class="input-group-text p-0">
               <select
                 v-model="selectedToken"
                 @change="onChange()"
-                class="border-0"
-                style="
-                  background-color: #e9ecef;
-                  outline: none;
-                  cursor: pointer;
-                "
+                class="h-100 border-0 px-3"
+                style="min-width:110px;cursor:pointer;"
               >
-                <option v-for="c in currencies">{{c.coinDenom}}</option>
+                <option v-for="c in currencies" :key="c.coinDenom">{{ c.coinDenom }}</option>
               </select>
             </span>
             <input
               id="address"
+              v-model="address"
               class="form-control"
               :placeholder="placeholder"
-              v-model="address"
               name="address"
             />
             <button
               type="button"
-              class="btn btn-primary d-flex flex-row fairblock-bg"
-              @click="requestToken(this)"
+              class="btn btn-primary d-flex align-items-center"
+              @click="requestToken($event.target)"
             >
-              <span>
-                <span
-                  id="button-loading"
-                  class="spinner-border spinner-border-sm mt-1 me-2"
-                  style="display: none"
-                  role="status"
-                  aria-hidden="true"
-                ></span>
-              </span>
-              <span class="sr-only">Request Token</span>
+              <span
+                id="button-loading"
+                class="spinner-border spinner-border-sm me-2"
+                style="display:none;"
+                role="status" aria-hidden="true"
+              ></span>
+              Request&nbsp;token
             </button>
           </div>
-        </div>
 
-        <div id="message" v-html="message"></div>
+          <div id="message" v-html="message"></div>
 
-        <div class="pt-5 text-center text-white">
-          This is NOT an incentivized testnet, please DO NOT farm tokens. You
-          can get tokens once every 24 hours.
-        </div>
+          <p class="text-center mt-5 fs-6" style="opacity:0.85;">
+            This is <strong>NOT</strong> an incentivized testnet — please don’t farm tokens.<br/>
+            You can request once every hour.<br/>
+            Testnet tokens may take time — avoid frequent requests.
+          </p>
+        </section>
       </main>
 
-      <footer class="my-5 pt-5 text-muted text-center text-small">
-        <p class="my-2 text-white">
-          Faucet Address: {{ faucet }}
-          <br />
-          Balance: {{ balance.amount }} {{balance.denom}}
+      <!-- footer -->
+      <footer class="container-xl pb-4 text-center">
+        <p class="small mb-1" v-if="balance.amount">
+          Faucet Address: {{ faucet }}<br/>
+          Balance: {{ balance.amount }} {{ balance.denom }}
         </p>
-        <p class="mb-1 text-white">
-          <span id="deployer" v-html="deployer"></span>
-        </p>
+        <p class="small mb-3" v-html="deployer"></p>
+
+        <div class="social">
+          <a href="https://discord.gg/fairblock" target="_blank" aria-label="Discord">
+            <!-- discord SVG -->
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="16" viewBox="0 0 127.14 96.36"><path fill="currentColor" d="M107.69 8.41A105.15 105.15 0 0 0 81.73 0l-1.75 3.66c17 3.73 24.7 9.08 24.7 9.08-20-9.1-47.22-9.1-65.38-2.28a102.88 102.88 0 0 0-11 5.09l-.53.24s8.29-5.08 26-9.1L50 0a105.23 105.23 0 0 0-25.95 8.41C3.49 37.64.58 66.07.58 94.09A105.27 105.27 0 0 0 31.45 107l4.74-5.48a69.7 69.7 0 0 1-10.5-5.48l1.7-2c20.35 9.26 42.42 9.26 62.24 0l1.7 2a74.1 74.1 0 0 1-10.5 5.48L95.69 107a105.27 105.27 0 0 0 30.87-12.91c0-28-2.9-56.45-18.87-85.68Z"/><path fill="currentColor" d="M42.16 65c-6.03 0-10.88-5.43-10.88-12.1s4.89-12.11 10.88-12.11S53 46.26 53 52.93 48.19 65 42.16 65Zm42.55 0c-6 0-10.88-5.43-10.88-12.1s4.89-12.11 10.88-12.11S95.6 46.26 95.6 52.93 90.7 65 84.71 65Z"/></svg>
+          </a>
+          <a href="https://x.com/0xfairblock" target="_blank" aria-label="X">
+            <!-- X SVG -->
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" d="M23.643 4.937a9.85 9.85 0 0 1-2.828.775 4.932 4.932 0 0 0 2.164-2.724 10.114 10.114 0 0 1-3.127 1.195A4.916 4.916 0 0 0 16.616 3c-2.72 0-4.926 2.2-4.926 4.917 0 .39.042.765.13 1.125C7.728 8.83 4.1 6.88 1.671 3.962A4.822 4.822 0 0 0 1 6.184c0 1.708.873 3.216 2.193 4.099a4.892 4.892 0 0 1-2.23-.616v.063c0 2.385 1.693 4.374 3.946 4.827a4.897 4.897 0 0 1-2.224.085c.628 1.956 2.445 3.38 4.6 3.42A9.87 9.87 0 0 1 0 19.543 13.897 13.897 0 0 0 7.548 22c9.06 0 14.01-7.498 14.01-13.986 0-.21 0-.42-.015-.63A10.025 10.025 0 0 0 24 4.59a9.72 9.72 0 0 1-2.357.647Z"/></svg>
+          </a>
+          <a href="https://github.com/Fairblock" target="_blank" aria-label="Telegram">
+            <!-- telegram SVG -->
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+              <path fill="currentColor"
+                d="M12 0C5.373 0 0 5.373 0 12c0 5.093 3.163 9.444 7.593 11.186.556.102.761-.241.761-.536 0-.265-.01-1.145-.016-2.079-3.09.673-3.744-1.492-3.744-1.492-.504-1.279-1.231-1.619-1.231-1.619-.984-.672.075-.659.075-.659 1.086.077 1.658 1.113 1.658 1.113.967 1.656 2.537 1.179 3.159.907.099-.693.379-1.179.689-1.45-2.459-.278-5.035-1.236-5.035-5.508 0-1.219.438-2.218 1.158-3.002-.115-.278-.502-1.399.109-2.915 0 0 .951-.304 3.114 1.145A10.85 10.85 0 0 1 12 6.844c.964.004 1.93.131 2.835.385 2.159-1.452 3.109-1.145 3.109-1.145.614 1.516.227 2.637.112 2.915.723.784 1.155 1.783 1.155 3.002 0 4.283-2.581 5.226-5.043 5.498.391.336.742.996.742 2.007 0 1.45-.014 2.619-.014 2.975 0 .298.2.645.768.535C20.844 21.44 24 17.09 24 12c0-6.627-5.373-12-12-12Z"/>
+            </svg>
+          </a>
+        </div>
       </footer>
     </div>
+
+    <!-- ░░░ Vue 3 component ░░░ -->
     <script type="module">
-      import { createApp } from "https://unpkg.com/vue@3/dist/vue.esm-browser.js";
+      import { createApp } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js';
+
       createApp({
         data() {
           return {
-            message: "",
-            testnet: "FairyRing Testnet",
-            logo: "https://pbs.twimg.com/profile_images/1674527932956409860/ja7Woiz6_400x400.jpg",
-            deployer: "",
-            address: "",
-            chain: "",
-            conf: {},
-            balance: {},
-            tokens: [],
-            selectedToken: {},
-            currencies: [],
+            message:'', testnet:'FairyRing Testnet',
+            logo:'https://pbs.twimg.com/profile_images/1674527932956409860/ja7Woiz6_400x400.jpg',
+            deployer:'', address:'', chain:'', conf:{},
+            balance:{}, tokens:[], selectedToken:{}, currencies:[],
           };
         },
+
         created() {
-          fetch("/config.json")
-            .then((response) => response.json())
-            .then((data) => {
-              this.conf = data;
-              this.testnet = data.name;
-              this.logo = data.logo;
-              this.chain = data.blockchain;
-              this.tokens = data.tokens;
-              this.selectedToken = data.currencies[0].coinDenom;
-              this.currencies = data.currencies;
+          fetch('/config.json')
+            .then(r=>r.json())
+            .then(data=>{
+              this.conf=data; this.testnet=data.name; this.logo=data.logo;
+              this.chain=data.blockchain; this.tokens=data.tokens;
+              this.selectedToken=data.currencies[0].coinDenom;
+              this.currencies=data.currencies; this.onChange();
+              if(data.deployer) this.deployer=`Hosted by ${data.deployer}`;
 
-              this.onChange();
-              if (data.deployer) {
-                this.deployer = `Hosted By ${data.deployer}`;
-              }
+              /* Keplr opt-in */
+              if(!window.keplr) return;
+              window.keplr.experimentalSuggestChain({
+                chainId:this.chain,rpc:data.endpoint.rpc,api:data.endpoint.api,
+                chainName:this.testnet,
+                stakeCurrency:{coinDenom:'FAIRY',coinDecimals:6,coinMinimalDenom:'ufairy'},
+                bip44:{coinType:118},feeCurrencies:[],currencies:this.currencies,
+                bech32Config:{
+                  bech32PrefixAccAddr:data.prefix,
+                  bech32PrefixAccPub:data.prefix+'pub',
+                  bech32PrefixValAddr:data.prefix+'valoper',
+                  bech32PrefixValPub:data.prefix+'valoperpub',
+                  bech32PrefixConsAddr:data.prefix+'valcons',
+                  bech32PrefixConsPub:data.prefix+'valconspub',
+                },
+              }).then(()=>window.keplr.enable(this.chain))
+                .then(()=>window.keplr.getKey(this.chain))
+                .then(k=>this.address=k.bech32Address);
+            }).catch(console.error);
+        },
 
-              if (!window.keplr) {
-                return;
-              }
-              window.keplr
-                .experimentalSuggestChain({
-                  chainId: this.chain,
-                  rpc: data.endpoint.rpc,
-                  api: data.endpoint.api,
-                  chainName: this.testnet,
-                  stakeCurrency: {
-                    coinDenom: "STAKE",
-                    coinDecimals: 0,
-                    coinMinimalDenom: "stake",
-                  },
-                  bip44: { coinType: 118 },
-                  feeCurrencies: [],
-                  currencies: this.currencies,
-                  bech32Config: {
-                    bech32PrefixAccAddr: data.prefix,
-                    bech32PrefixAccPub: data.prefix + "pub",
-                    bech32PrefixValAddr: data.prefix + "valoper",
-                    bech32PrefixValPub: data.prefix + "valoperpub",
-                    bech32PrefixConsAddr: data.prefix + "valcons",
-                    bech32PrefixConsPub: data.prefix + "valconspub",
-                  },
-                })
-                .then(() => window.keplr.enable(this.chain))
-                .then(() => window.keplr.getKey(this.chain))
-                .then((result) => {
-                  this.address = result.bech32Address;
-                });
-            })
-            .catch((err) => console.error);
-        },
-        computed: {
-          placeholder() {
-            if (this.conf.sample) {
-              return `Input an address (e.g.: ${
-                this.conf.sample[this.chain]
-              }) to received tokens`;
-            } else {
-              return "Input an address to received tokens";
-            }
+        computed:{
+          placeholder(){
+            if(this.conf.sample)
+              return `Input an address (e.g. ${this.conf.sample[this.chain]}) to receive tokens`;
+            return 'Input an address to receive tokens';
           },
-          faucet() {
-            return this.conf.sample ? this.conf.sample[this.chain] : "";
+          faucet(){ return this.conf.sample ? this.conf.sample[this.chain] : ''; },
+        },
+
+        methods:{
+          findSelectedTokenMinimalDenom(denom){
+            return this.currencies.find(c=>c.coinDenom===denom)?.coinMinimalDenom||null;
+          },
+          onChange(){
+            this.balance={};
+            const d=this.findSelectedTokenMinimalDenom(this.selectedToken);
+            if(!d) return;
+            fetch(`/balance/${d}`).then(r=>r.json()).then(b=>this.balance=b);
+          },
+          requestToken(btn){
+            if(!this.address){
+              this.message='<span class="text-danger">Address is required</span>'; return;
+            }
+            btn.disabled=true; document.getElementById('button-loading').style.display='block';
+            const d=this.findSelectedTokenMinimalDenom(this.selectedToken); if(!d) return;
+            fetch(`/send/${this.address}/${d}`).then(r=>r.json()).then(data=>{
+              btn.disabled=false; document.getElementById('button-loading').style.display='none';
+              this.message=`<div class="alert alert-${data.result.code===0?'success':'danger'} alert-dismissible fade show mt-2" role="alert">
+                <strong>${data.result.code===0?'Token sent!':'Request failed'}</strong>
+                <textarea class="form-control mt-2" rows="4" style="background:transparent">${JSON.stringify(data,null,2)}</textarea>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>`;
+            });
           },
         },
-        methods: {
-          findSelectedTokenMinimalDenom(selectedToken) {
-            for (var i = 0; i < this.currencies.length; i++) {
-              if (this.currencies[i].coinDenom == selectedToken) {
-                return this.currencies[i].coinMinimalDenom;
-              }
-            }
-            return null;
-          },
-          onChange() {
-            this.balance = {}; // reset balance
-            const denom = this.findSelectedTokenMinimalDenom(
-              this.selectedToken
-            );
-            if (denom == null) {
-              return;
-            }
-            fetch(`/balance/${denom}`)
-              .then((r) => r.json())
-              .then((balance) => {
-                this.balance = balance;
-              });
-          },
-          requestToken(obj) {
-            if (this.address) {
-              // button state
-              obj.disabled = true;
-              document.getElementById("button-loading").style.display = "block";
-              const denom = this.findSelectedTokenMinimalDenom(
-                this.selectedToken
-              );
-              if (denom == null) {
-                return;
-              }
-              fetch(`/send/${this.address}/${denom}`)
-                .then((response) => response.json())
-                .then((data) => {
-                  // button state
-                  obj.disabled = false;
-                  document.getElementById("button-loading").style.display =
-                    "none";
-                  // show result
-                  this.message = `
-                  <div class="alert alert-${
-                    data.result.code === 0 ? "success" : "danger"
-                  } alert-dismissible show fade mt-2" role="alert">
-                      <li>${
-                        data.result.code === 0 ? "Token sent" : "Request failed"
-                      }</li>
-                      <textarea class="form-control mt-1" rows="5" style="background-color:transparent">${JSON.stringify(
-                        data,
-                        null,
-                        2
-                      )}</textarea>
-                      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                  </div>
-                  `;
-                });
-            } else {
-              this.message =
-                '<span class="text-danger">Address is required</span>';
-            }
-          },
-        },
-      }).mount("#app");
+      }).mount('#app');
     </script>
 
+    <!-- ░░░ bootstrap  js ░░░ -->
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
       crossorigin="anonymous"
     ></script>
+    <!-- ─── How It Works Modal ─────────────────────────────────────────── -->
+<div
+class="modal fade"
+id="howItWorksModal"
+tabindex="-1"
+aria-labelledby="howItWorksLabel"
+aria-hidden="true"
+>
+<div class="modal-dialog modal-dialog-centered">
+  <div class="modal-content glass p-4">
+    <div class="modal-header border-0">
+      <h5
+        class="modal-title text-center w-100"
+        id="howItWorksLabel"
+      >
+        How it works
+      </h5>
+      <button
+        type="button"
+        class="btn-close btn-close-white"
+        data-bs-dismiss="modal"
+        aria-label="Close"
+      ></button>
+    </div>
+    <div class="modal-body text-white fs-5">
+      <p>If you do not have a Keplr or Leap wallet, install one:</p>
+      <ul>
+        <li>
+          <a href="https://www.keplr.app/" target="_blank" class="text-decoration-underline text-light">
+            Install Keplr Wallet
+          </a>
+        </li>
+        <li>
+          <a href="https://www.leapwallet.io/" target="_blank" class="text-decoration-underline text-light">
+            Install Leap Wallet
+          </a>
+        </li>
+      </ul>
+      <hr class="border-secondary" />
+
+      <h6 class="mt-3">🔹 Keplr (automatic)</h6>
+      <ol>
+        <li>The faucet will detect your Keplr extension.</li>
+        <li>It will auto-switch your network to FairyRing Testnet.</li>
+        <li>Your wallet address will be filled into the input box.</li>
+      </ol>
+
+      <h6 class="mt-4">🔹 Leap (manual)</h6>
+      <ol>
+        <li>Open your Leap extension popup.</li>
+        <li>Manually add the “Fairblock FairyRing Testnet” network.</li>
+        <li>Copy your address and paste it into the faucet.</li>
+      </ol>
+
+      <p class="mt-3">
+        You may request FAIRY tokens <strong>once per hour</strong>.
+      </p>
+      <p class="mt-2 text-warning">
+        If you already see “Tokens Sent”, please don’t submit another request.  
+        It may take some time for the testnet tokens to arrive.
+      </p>
+    </div>
+
+    <div class="modal-footer border-0 justify-content-center">
+      <button
+        type="button"
+        class="btn btn-docs px-4 py-2"
+        data-bs-dismiss="modal"
+      >
+        Got it
+      </button>
+    </div>
+  </div>
+</div>
+</div>
+<!-- ──────────────────────────────────────────────────────────────────── -->
+
   </body>
 </html>

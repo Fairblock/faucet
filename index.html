@@ -315,26 +315,32 @@
               }
             });
           },
-          async connectKeplr(){
-            if (window.keplr) {                     // extension or in-app browser
+          async connectKeplr () {
+            /* 1 ▸ Desktop extension OR Keplr in-app browser (mobile) */
+            if (window.keplr) {
               await this.suggest(window.keplr);
               await window.keplr.enable(this.chain);
               this.address = (await window.keplr.getKey(this.chain)).bech32Address;
-              return;
+              return;                                // ✅ already connected
             }
           
-            /* ——— fallback paths ——— */
-            if (this.isMobile()) {                  // mobile Safari / Chrome etc.
-              /* Open the same dApp inside Keplr Mobile’s browser.
-                 deeplink.keplr.app redirects:  
-                 • mobile → Keplr app (if installed) and loads ?url=...  
-                 • desktop  → install page   */
-              const target = `https://deeplink.keplr.app/?url=${encodeURIComponent(location.href)}`;
-              window.location.href = target;        // will switch apps if possible
-            } else {
-              alert('Keplr extension not found.\nInstall it from the Chrome Web Store and reload the page.');
-            }
+            /* 2 ▸ Build deep-links ------------------------------------------------ */
+            const dappURL   = encodeURIComponent(location.href);
+            const schemeURL = `keplrwallet://browser_open?url=${dappURL}`;          // iOS / Android app
+            const webURL    = `https://deeplink.keplr.app/web-browser?url=${dappURL}`; // fallback → store / extension
           
+            /* 3 ▸ Detect a successful switch to the Keplr app (page becomes hidden) */
+            let opened = false;
+            const markOpened = () => { opened = true; };
+          
+            window.addEventListener('blur',             markOpened, { once: true });
+            document.addEventListener('visibilitychange', () => {
+              if (document.visibilityState === 'hidden') markOpened();
+            }, { once: true });
+          
+            /* 4 ▸ Fire the custom scheme; if it doesn’t trigger, use the fallback */
+            setTimeout(() => { if (!opened) location.href = webURL; }, 1200);
+            location.href = schemeURL;                                         // 🚀
           },
           async connectLeap () {
             /* 1 ▸ normal extension / in-app browser path */

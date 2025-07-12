@@ -226,7 +226,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
             crossorigin="anonymous"></script>
-
+       
     <!-- ░░░ Vue 3 component ░░░ -->
     <script type="module">
       import { createApp } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js';
@@ -264,6 +264,16 @@
           faucet(){return this.conf.sample?this.conf.sample[this.chain]:''}
         },
         methods:{
+          WALLETCONNECT_ID : '57fb637d7a65217d80c6bc3cd9309643',      // ← paste from Step 0-A
+WC_NAMESPACES    : {
+  cosmos: {
+    chains : ['cosmos:fairyring-testnet-3'],          // ← e.g. cosmos:fairyring-testnet-1
+    methods: [
+      'cosmos_getAccounts', 'cosmos_signDirect', 'cosmos_signAmino'
+    ],
+    events : []
+  }
+},
           isMobile () {
             return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
           },
@@ -324,23 +334,61 @@
               return;                                // ✅ already connected
             }
           
-            /* 2 ▸ Build deep-links ------------------------------------------------ */
-            const dappURL   = encodeURIComponent(location.href);
-            const schemeURL = `keplrwallet://browser_open?url=${dappURL}`;          // iOS / Android app
-            const webURL    = `https://deeplink.keplr.app/web-browser?url=${dappURL}`; // fallback → store / extension
-          
-            /* 3 ▸ Detect a successful switch to the Keplr app (page becomes hidden) */
-            let opened = false;
-            const markOpened = () => { opened = true; };
-          
-            window.addEventListener('blur',             markOpened, { once: true });
-            document.addEventListener('visibilitychange', () => {
-              if (document.visibilityState === 'hidden') markOpened();
-            }, { once: true });
-          
-            /* 4 ▸ Fire the custom scheme; if it doesn’t trigger, use the fallback */
-            setTimeout(() => { if (!opened) location.href = webURL; }, 1200);
-            location.href = schemeURL;                                         // 🚀
+           
+          /* 2 ▸ Mobile / desktop without extension → WalletConnect v2 */
+/* 2 ▸ Mobile / desktop without extension → WalletConnect v2 */
+if (!window.SignClient) {
+  await new Promise((resolve, reject) => {
+    const tag     = document.createElement('script');
+    tag.src       = './sign-client.min.js';  // ← the file that shows 200 OK
+    tag.onload    = resolve;
+    tag.onerror   = () => reject(new Error('WC script failed'));
+    document.head.appendChild(tag);
+  }).catch(err => {
+    console.error(err);
+    alert('WalletConnect script could not load.');
+    return;
+  });
+}
+
+/* at this point SignClient exists for sure */
+const SignClient = window.SignClient;
+/* init */
+const client = await SignClient.init({
+  projectId: this.WALLETCONNECT_ID,
+  metadata : {
+    name       : 'Fairblock Faucet',
+    description: 'Get FAIRY testnet tokens',
+    url        : location.origin,
+    icons      : [
+      'https://raw.githubusercontent.com/Fairblock/assets/main/logo/icon.png'
+    ]
+  }
+});
+
+/* request */
+const { uri, approval } = await client.connect({
+  requiredNamespaces: this.WC_NAMESPACES
+});
+if (!uri) { alert('Failed to create WC link'); return; }
+
+/* deep-link mobile, QR desktop */
+if (this.isMobile()) {
+  location.href = `keplrwallet://wcV2?uri=${encodeURIComponent(uri)}`;
+} else {
+  window.open(
+    `https://www.walletconnect.com/qr?uri=${encodeURIComponent(uri)}`,
+    '_blank','width=420,height=505'
+  );
+}
+
+/* wait → get address */
+const session = await approval();
+const acct    = session.namespaces.cosmos.accounts[0];   // cosmos:chain:addr
+this.address  = acct.split(':')[2];
+
+
+                                       // 🚀
           },
           async connectLeap () {
             /* 1 ▸ normal extension / in-app browser path */

@@ -264,6 +264,9 @@
           faucet(){return this.conf.sample?this.conf.sample[this.chain]:''}
         },
         methods:{
+          isMobile () {
+            return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+          },
           buildFeeCurrency(base){
             return {
               ...base,                         // coinDenom / coinMinimalDenom / decimals
@@ -313,16 +316,38 @@
             });
           },
           async connectKeplr(){
-            if(!window.keplr){alert('Keplr extension not found');return;}
-            await this.suggest(window.keplr);
-            await window.keplr.enable(this.chain);
-            this.address=(await window.keplr.getKey(this.chain)).bech32Address;
+            if (window.keplr) {                     // extension or in-app browser
+              await this.suggest(window.keplr);
+              await window.keplr.enable(this.chain);
+              this.address = (await window.keplr.getKey(this.chain)).bech32Address;
+              return;
+            }
+          
+            /* ——— fallback paths ——— */
+            if (this.isMobile()) {                  // mobile Safari / Chrome etc.
+              /* Open the same dApp inside Keplr Mobile’s browser.
+                 deeplink.keplr.app redirects:  
+                 • mobile → Keplr app (if installed) and loads ?url=...  
+                 • desktop  → install page   */
+              const target = `https://deeplink.keplr.app/?url=${encodeURIComponent(location.href)}`;
+              window.location.href = target;        // will switch apps if possible
+            } else {
+              alert('Keplr extension not found.\nInstall it from the Chrome Web Store and reload the page.');
+            }
+          
           },
-          async connectLeap(){
-            if(!window.leap){alert('Leap extension not found');return;}
-            await this.suggest(window.leap);
-            await window.leap.enable(this.chain);
-            this.address=(await window.leap.getKey(this.chain)).bech32Address;
+          async connectLeap () {
+            /* 1 ▸ normal extension / in-app browser path */
+            if (window.leap) {
+              await this.suggest(window.leap);
+              await window.leap.enable(this.chain);
+              this.address = (await window.leap.getKey(this.chain)).bech32Address;
+              return;                              // ✅ all set
+            }
+          
+            /* 2 ▸ mobile or desktop *without* extension → use pre-made deep-link */
+            const deeplink = 'https://leapcosmoswallet.page.link/eK2bZ5Repr45qqt98'; // ← your slug
+            window.location.href = deeplink;
           }
         }
       }).mount('#app');

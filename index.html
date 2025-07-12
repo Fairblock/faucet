@@ -226,7 +226,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
             crossorigin="anonymous"></script>
-       
+
     <!-- ░░░ Vue 3 component ░░░ -->
     <script type="module">
       import { createApp } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js';
@@ -257,23 +257,32 @@
               this.selectedToken=this.currencies[0].coinDenom;
               this.onChange();
               if(d.deployer) this.deployer=`Hosted by ${d.deployer}`;
+
+
+    if (window.keplr && !this.address) {
+      this.connectKeplr().catch(console.error);
+    }
             });
+        },
+        mounted() {
+          /* A ▸ auto-connect if we’re already inside Keplr (mobile or desktop).   *
+           *     Wait up to 3 s for the provider to inject, then give up.         */
+          if (this.address) return;                 // already filled by URL param
+        
+          const poll = (tries = 30) => {
+            if (window.keplr) {
+              this._doKeplrConnect(window.keplr);
+            } else if (tries) {
+              setTimeout(() => poll(tries - 1), 100); // keep polling for 3 s
+            }
+          };
+          poll();
         },
         computed:{
           placeholder(){return this.conf.sample?`Input an address (e.g. ${this.conf.sample[this.chain]}) to receive tokens`:'Input an address to receive tokens'},
           faucet(){return this.conf.sample?this.conf.sample[this.chain]:''}
         },
         methods:{
-          WALLETCONNECT_ID : '57fb637d7a65217d80c6bc3cd9309643',      // ← paste from Step 0-A
-WC_NAMESPACES    : {
-  cosmos: {
-    chains : ['cosmos:fairyring-testnet-3'],          // ← e.g. cosmos:fairyring-testnet-1
-    methods: [
-      'cosmos_getAccounts', 'cosmos_signDirect', 'cosmos_signAmino'
-    ],
-    events : []
-  }
-},
           isMobile () {
             return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
           },
@@ -325,71 +334,59 @@ WC_NAMESPACES    : {
               }
             });
           },
+          /* ── Keplr connection (mobile-aware + URL param) ─────────────────────── */
           async connectKeplr () {
-            /* 1 ▸ Desktop extension OR Keplr in-app browser (mobile) */
+            /* 1 ▸ If Keplr is already injected (desktop extension OR Keplr in-app browser)
+                  we can safely prompt the user and fetch the address. */
             if (window.keplr) {
-              await this.suggest(window.keplr);
-              await window.keplr.enable(this.chain);
-              this.address = (await window.keplr.getKey(this.chain)).bech32Address;
-              return;                                // ✅ already connected
+              await this.suggest(window.keplr);              // add chain if needed
+              await window.keplr.enable(this.chain);         // <== requires a gesture
+              const { bech32Address } = await window.keplr.getKey(this.chain);
+              this.address = bech32Address;
+              return;
             }
           
-           
-          /* 2 ▸ Mobile / desktop without extension → WalletConnect v2 */
-/* 2 ▸ Mobile / desktop without extension → WalletConnect v2 */
-if (!window.SignClient) {
-  await new Promise((resolve, reject) => {
-    const tag     = document.createElement('script');
-    tag.src       = './sign-client.min.js';  // ← the file that shows 200 OK
-    tag.onload    = resolve;
-    tag.onerror   = () => reject(new Error('WC script failed'));
-    document.head.appendChild(tag);
-  }).catch(err => {
-    console.error(err);
-    alert('WalletConnect script could not load.');
-    return;
-  });
-}
-
-/* at this point SignClient exists for sure */
-const SignClient = window.SignClient;
-/* init */
-const client = await SignClient.init({
-  projectId: this.WALLETCONNECT_ID,
-  metadata : {
-    name       : 'Fairblock Faucet',
-    description: 'Get FAIRY testnet tokens',
-    url        : location.origin,
-    icons      : [
-      'https://raw.githubusercontent.com/Fairblock/assets/main/logo/icon.png'
-    ]
-  }
-});
-
-/* request */
-const { uri, approval } = await client.connect({
-  requiredNamespaces: this.WC_NAMESPACES
-});
-if (!uri) { alert('Failed to create WC link'); return; }
-
-/* deep-link mobile, QR desktop */
-if (this.isMobile()) {
-  location.href = `keplrwallet://wcV2?uri=${encodeURIComponent(uri)}`;
-} else {
-  window.open(
-    `https://www.walletconnect.com/qr?uri=${encodeURIComponent(uri)}`,
-    '_blank','width=420,height=505'
-  );
-}
-
-/* wait → get address */
-const session = await approval();
-const acct    = session.namespaces.cosmos.accounts[0];   // cosmos:chain:addr
-this.address  = acct.split(':')[2];
-
-
-                                       // 🚀
+            /* 2 ▸ Otherwise we're in Safari/Chrome without an extension.
+                  Deep-link to Keplr and ask the user to tap Connect again there. */
+            const target =
+              `https://deeplink.keplr.app/show-address?chainId=fairyring-testnet-3`;
+            location.href = target;
           },
+
+/* helper actually talking to Keplr ------------------------------------- */
+async _doKeplrConnect (provider) {
+  try {
+    /* 1 ▸ Add the chain if the wallet supports suggest-chain.
+       *     Mobile < v1.9 didn’t – so ignore "method not found". */
+    try {
+      await this.suggest(provider);
+    } catch (e) {
+      if (!/Suggest|experimental/i.test(e.message)) throw e;
+    }
+
+    /* 2 ▸ Enable the chain (does nothing if it was already enabled). */
+    await provider.enable(this.chain);
+
+    /* 3 ▸ Always get the key – even when there was no UI. */
+    const { bech32Address } = await provider.getKey(this.chain);
+    this.address = bech32Address;
+
+    /* 4 ▸ Persist in the URL so refresh/share keeps the address. */
+    const u = new URL(location.href);
+    u.searchParams.set('addr', bech32Address);
+    history.replaceState({}, '', u);
+
+    /* 5 ▸ Close the modal if it’s still open (nice touch). */
+    const m = bootstrap?.Modal?.getInstance(
+      document.getElementById('connectModal')
+    );
+    m?.hide();
+  } catch (err) {
+    console.error('[Keplr] connect failed:', err);
+    alert('Keplr could not connect – please try again or reinstall the app.');
+  }
+},
+
           async connectLeap () {
             /* 1 ▸ normal extension / in-app browser path */
             if (window.leap) {

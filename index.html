@@ -94,7 +94,7 @@
       <!-- header -->
       <header class="container-xl py-4 d-flex justify-content-between align-items-center">
         <img
-          src="https://file.notion.so/f/f/06eb8ba9-0030-4f78-b149-5d4d0a26f1ec/3dde543b-d180-4f9b-ac3c-cfb412f0328c/White_logo.png?table=block&id=1b944281-1c93-80ee-bee2-e49074846932&spaceId=06eb8ba9-0030-4f78-b149-5d4d0a26f1ec&expirationTimestamp=1752292800000&signature=YmTFplw789ZgUzbu6IfOGBtS_ESK2K1HPQeoUvzeCtw&downloadName=White_logo.png"
+          src="./White_logo.png"
           alt="Fairblock"
           style="width:320px"
         />
@@ -264,20 +264,8 @@
     }
             });
         },
-        mounted() {
-          /* A ▸ auto-connect if we’re already inside Keplr (mobile or desktop).   *
-           *     Wait up to 3 s for the provider to inject, then give up.         */
-          if (this.address) return;                 // already filled by URL param
+    
         
-          const poll = (tries = 30) => {
-            if (window.keplr) {
-              this._doKeplrConnect(window.keplr);
-            } else if (tries) {
-              setTimeout(() => poll(tries - 1), 100); // keep polling for 3 s
-            }
-          };
-          poll();
-        },
         computed:{
           placeholder(){return this.conf.sample?`Input an address (e.g. ${this.conf.sample[this.chain]}) to receive tokens`:'Input an address to receive tokens'},
           faucet(){return this.conf.sample?this.conf.sample[this.chain]:''}

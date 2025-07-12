@@ -9,121 +9,78 @@
     <link rel="icon" href="https://raw.githubusercontent.com/Fairblock/assets/main/logo/icon.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;600;800&display=swap"
-      rel="stylesheet"
-    />
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;600;800&display=swap" rel="stylesheet" />
     <meta name="robots" content="index,follow" />
     <meta name="description" content="Faucet for FairyRing" />
 
     <!-- ───────── bootstrap css ────────────────────────────────────────── -->
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi"
-      crossorigin="anonymous"
-    />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi"
+          crossorigin="anonymous" />
 
     <!-- ───────── custom styles ────────────────────────────────────────── -->
     <style>
-      /* ░░░ global backdrop: video if available, gradient fallback ░░░ */
-      body {
-        font-family: 'EB Garamond', serif;
-        color: #e2e8f0;
-        /* fallback gradient for browsers that don’t play / find the video */
-        background: radial-gradient(circle at 50% 30%, #bcc4d4 0%, #4d5869 100%);
-        min-height: 100vh;
-      }
-      .glass h1 {
-        color: #46A2FF;
-      }
-      .alert-danger textarea.form-control {
-        color: #0d0d0d !important;       /* dark text */
-        background-color: rgba(255,255,255,0.20) !important;  /* slight white tint */
-        border-color: rgba(0,0,0,0.15) !important;
-      }
-      .alert-success textarea.form-control {
-        /* keep the alert-green background, only tweak the textarea */
-        color: #0d0d0d !important;                 /* dark text */
-        background-color: rgba(255,255,255,0.20) !important; /* translucent white */
-        border-color: rgba(0,0,0,0.15) !important; /* subtle dark border */
-      }
-      #bg-video {
-        position: fixed;
-        inset: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        z-index: -2;
-        /* hide broken video icon in Firefox if the src is wrong */
-        background: transparent;
-      }
-
-      .vignette {
-        position: fixed;
-        inset: 0;
-        background: radial-gradient(
-          circle at 50% 30%,
-          rgba(0, 25, 56, 0) 0%,
-          rgba(0, 25, 56, 0.4) 60%,
-          rgba(0, 15, 35, 0.85) 100%
-        );
-        z-index: -1;
-      }
-
-      /* ░░░ typography ░░░ */
-      h1 { font-size: 3.5rem; font-weight: 800; }
-      .lead { font-size: 1.25rem; }
-
-      /* ░░░ nav buttons ░░░ */
-      .quick-links a { font-weight: 600; letter-spacing: 0.02em; }
-      .btn-faq  { background:#fff;     color:#0d0d0d; }
-      .btn-docs { background:#46a2ff; color:#fff; }
-      .btn-faq:hover  { background:#d9d9d9; color:#0d0d0d; }
-      .btn-docs:hover { background:#1f83f5; color:#fff; }
-
-      /* ░░░ glass panel (with graceful fallback) ░░░ */
-      .glass {
-        border-radius: 0.75rem;
-        padding: 3.5rem 2rem 4rem;
-        border: 1px solid rgba(255,255,255,0.05);
-        background: rgba(8,14,29,0.55);           /* fallback colour */
-      }
-      @supports (backdrop-filter: blur(10px)) or (-webkit-backdrop-filter: blur(10px)) {
-        .glass {
-          backdrop-filter: blur(10px) brightness(1.05);
-          -webkit-backdrop-filter: blur(10px) brightness(1.05);
+      body{font-family:'EB Garamond',serif;color:#e2e8f0;background:radial-gradient(circle at 50% 30%,#bcc4d4 0%,#4d5869 100%);min-height:100vh}
+      .glass h1{color:#46A2FF}
+      .alert-danger textarea.form-control,.alert-success textarea.form-control{color:#0d0d0d!important;background:rgba(255,255,255,.2)!important;border-color:rgba(0,0,0,.15)!important}
+      #bg-video{position:fixed;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2;background:transparent}
+      .vignette{position:fixed;inset:0;background:radial-gradient(circle at 50% 30%,rgba(0,25,56,0) 0%,rgba(0,25,56,.4) 60%,rgba(0,15,35,.85) 100%);z-index:-1}
+      h1{font-size:3.5rem;font-weight:800}.lead{font-size:1.25rem}
+      .quick-links a,.quick-links button{font-weight:600;letter-spacing:.02em}
+      .btn-faq{background:#fff;color:#0d0d0d}.btn-docs{background:#46a2ff;color:#fff}.btn-faq:hover{background:#d9d9d9;color:#0d0d0d}.btn-docs:hover{background:#1f83f5;color:#fff}
+      .glass{border-radius:.75rem;padding:3.5rem 2rem 4rem;border:1px solid rgba(255,255,255,.05);background:rgba(8,14,29,.55)}
+      @supports(backdrop-filter:blur(10px)){.glass{backdrop-filter:blur(10px) brightness(1.05)}}
+      .glass .form-control,.glass .input-group-text,.glass select{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);color:#e2e8f0}
+      .glass .btn-primary{background:#46a2ff;border:none;font-weight:700;padding-inline:2rem}.glass .btn-primary:hover{background:#1f83f5}
+      .social a{display:inline-flex;width:44px;height:44px;align-items:center;justify-content:center;border-radius:50%;background:rgba(255,255,255,.05);color:#e2e8f0;margin:0 6px;transition:background .2s}
+      .social a:hover{background:rgba(255,255,255,.15);text-decoration:none}
+       /* ░░░ phone view tweaks  ░░░ */
+       @media (max-width: 576px){            /* Bootstrap “xs” breakpoint */
+        /* header: logo above buttons */
+        header.container-xl{
+          flex-direction:column!important;
+          gap:1rem;
+          text-align:center;
         }
-      }
+        header img{ width:180px!important; }
+        .input-group .form-control{width:100%!important;}
 
-      .glass .form-control,
-      .glass .input-group-text,
-      .glass select {
-        background: rgba(255,255,255,0.05);
-        border: 1px solid rgba(255,255,255,0.08);
-        color:#e2e8f0;
-      }
-      .glass .btn-primary {
-        background:#46a2ff; border:none;
-        font-weight:700; padding-inline:2rem;
-      }
-      .glass .btn-primary:hover { background:#1f83f5; }
+        /* quick-links: stack & stretch */
+        .quick-links{
+          flex-wrap:wrap;
+          width:100%;
+          gap:.5rem!important;
+        }
+        .quick-links .btn{ flex:1 1 auto; }
 
-      /* ░░░ footer socials ░░░ */
-      .social a {
-        display:inline-flex; width:44px; height:44px;
-        align-items:center; justify-content:center;
-        border-radius:50%; background:rgba(255,255,255,0.05);
-        color:#e2e8f0; margin:0 6px; transition:background .2s;
+        /* hero glass card */
+        .glass{
+          padding:2rem 1.25rem!important;
+        }
+        .glass h1{ font-size:2.2rem!important; }
+
+        /* input-group: keep elements on their own lines */
+        .input-group{
+          flex-direction:column;
+        }
+        .input-group > :not(:last-child){
+          border-radius:.375rem!important;  /* nice rounded corners */
+          margin-bottom:.75rem!important;   /* spacing between rows */
+        }
+        .input-group-text select{ width:100%!important; }
+        .glass .btn-primary{ width:100%; justify-content:center; }
+
+        /* footer socials smaller gap */
+        .social a{ width:36px;height:36px;margin:0 4px; }
       }
-      .social a:hover { background:rgba(255,255,255,0.15); text-decoration:none; }
     </style>
   </head>
 
   <body>
     <!-- ░░░ video bg ░░░ -->
     <video id="bg-video" autoplay muted loop playsinline preload="auto" crossorigin="anonymous">
-      <source src="bg-animation-loop.mp4" type="video/mp4">
+      <source src="bg-animation-loop.mp4" type="video/mp4" />
     </video>
     <div class="vignette"></div>
 
@@ -142,15 +99,12 @@
           style="width:320px"
         />
         <div class="quick-links d-flex gap-3">
-            <!-- opens the new modal instead of toggling a banner -->
-  <button
-    type="button"
-    class="btn btn-faq px-4 py-2"
-    data-bs-toggle="modal"
-    data-bs-target="#howItWorksModal"
-  >
-    How it works
-  </button>
+          <button type="button" class="btn btn-faq px-4 py-2" data-bs-toggle="modal" data-bs-target="#connectModal">
+            Connect wallet
+          </button>
+          <button type="button" class="btn btn-faq px-4 py-2" data-bs-toggle="modal" data-bs-target="#howItWorksModal">
+            How it works
+          </button>
           <a href="https://docs.fairblock.network/docs/welcome/Vision" class="btn btn-docs px-4 py-2">Docs</a>
         </div>
       </header>
@@ -159,39 +113,17 @@
       <main class="container-xl flex-grow-1 d-flex flex-column align-items-center justify-content-center">
         <section class="glass col-12 col-lg-8 col-xl-6">
           <h1 class="text-center mb-3">Fairblock Faucet</h1>
-          <p class="lead text-center mb-5">
-            Bootstrap your testnet wallet
-          </p>
+          <p class="lead text-center mb-5">Bootstrap your testnet wallet</p>
 
           <div class="input-group mb-4">
             <span class="input-group-text p-0">
-              <select
-                v-model="selectedToken"
-                @change="onChange()"
-                class="h-100 border-0 px-3"
-                style="min-width:110px;cursor:pointer;"
-              >
+              <select v-model="selectedToken" @change="onChange()" class="h-100 border-0 px-3" style="min-width:110px;cursor:pointer;">
                 <option v-for="c in currencies" :key="c.coinDenom">{{ c.coinDenom }}</option>
               </select>
             </span>
-            <input
-              id="address"
-              v-model="address"
-              class="form-control"
-              :placeholder="placeholder"
-              name="address"
-            />
-            <button
-              type="button"
-              class="btn btn-primary d-flex align-items-center"
-              @click="requestToken($event.target)"
-            >
-              <span
-                id="button-loading"
-                class="spinner-border spinner-border-sm me-2"
-                style="display:none;"
-                role="status" aria-hidden="true"
-              ></span>
+            <input id="address" v-model="address" class="form-control" :placeholder="placeholder" name="address" />
+            <button type="button" class="btn btn-primary d-flex align-items-center" @click="requestToken($event.target)">
+              <span id="button-loading" class="spinner-border spinner-border-sm me-2" style="display:none;" role="status" aria-hidden="true"></span>
               Request&nbsp;token
             </button>
           </div>
@@ -199,8 +131,8 @@
           <div id="message" v-html="message"></div>
 
           <p class="text-center mt-5 fs-6" style="opacity:0.85;">
-            This is <strong>NOT</strong> an incentivized testnet — please don’t farm tokens.<br/>
-            You can request once every hour.<br/>
+            This is <strong>NOT</strong> an incentivized testnet — please don’t farm tokens.<br />
+            You can request once every hour.<br />
             Testnet tokens may take time — avoid frequent requests.
           </p>
         </section>
@@ -209,7 +141,7 @@
       <!-- footer -->
       <footer class="container-xl pb-4 text-center">
         <p class="small mb-1" v-if="balance.amount">
-          Faucet Address: {{ faucet }}<br/>
+          Faucet Address: {{ faucet }}<br />
           Balance: {{ balance.amount }} {{ balance.denom }}
         </p>
         <p class="small mb-3" v-html="deployer"></p>
@@ -232,7 +164,68 @@
           </a>
         </div>
       </footer>
-    </div>
+
+      <!-- ░░░ How It Works Modal (inside #app) ░░░ -->
+      <div class="modal fade" id="howItWorksModal" tabindex="-1" aria-labelledby="howItWorksLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content glass p-4">
+            <div class="modal-header border-0">
+              <h5 class="modal-title text-center w-100" id="howItWorksLabel">How it works</h5>
+              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-white fs-5">
+              <p>If you do not have a Keplr or Leap wallet, install one:</p>
+              <ul>
+                <li><a href="https://www.keplr.app/" target="_blank" class="text-decoration-underline text-light">Install Keplr Wallet</a></li>
+                <li><a href="https://www.leapwallet.io/" target="_blank" class="text-decoration-underline text-light">Install Leap Wallet</a></li>
+              </ul>
+              <hr class="border-secondary" />
+              <h6 class="mt-3 fs-5">🔹 After installing a wallet</h6>
+              <ol>
+                <li>Click the <strong>Connect&nbsp;wallet</strong> button at the top-right of this page.</li>
+                <li>Select <strong>Keplr</strong> or <strong>Leap</strong>.</li>
+                <li>The faucet asks the wallet to add&nbsp;/&nbsp;enable
+                    <em>Fairblock FairyRing Testnet</em> for you.</li>
+                <li>Your <code>fairy…</code> address is filled automatically in the input box.</li>
+                <li>You’re ready – hit <strong>Request&nbsp;token</strong>.</li>
+              </ol>
+              <p class="mt-2">
+                <strong>Keplr users:</strong> open the extension once and click the grey “Enable” button
+                next to Fairblock FairyRing Testnet so you can see your received tokens.  
+                (Leap does this automatically.)
+              </p>
+              <p class="mt-3">You may request FAIRY tokens <strong>once per hour</strong>.</p>
+              <p class="mt-2 text-warning">If you already see “Tokens Sent”, please don’t submit another request. Tokens can take a few minutes to arrive.
+            </div>
+            <div class="modal-footer border-0 justify-content-center">
+              <button type="button" class="btn btn-docs px-4 py-2" data-bs-dismiss="modal">Got it</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ░░░ Connect Wallet Modal (inside #app) ░░░ -->
+      <div class="modal fade" id="connectModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content glass p-4">
+            <div class="modal-header border-0">
+              <h5 class="modal-title text-center w-100">Connect wallet</h5>
+              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+              <p class="mb-4">Choose a wallet</p>
+              <button class="btn btn-docs w-100 mb-2" data-bs-dismiss="modal" @click="connectKeplr">Keplr</button>
+              <button class="btn btn-docs w-100"    data-bs-dismiss="modal" @click="connectLeap">Leap</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div> <!-- #app -->
+
+    <!-- ░░░ bootstrap js ░░░ -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
+            crossorigin="anonymous"></script>
 
     <!-- ░░░ Vue 3 component ░░░ -->
     <script type="module">
@@ -241,164 +234,98 @@
       createApp({
         data() {
           return {
-            message:'', testnet:'FairyRing Testnet',
-            logo:'https://pbs.twimg.com/profile_images/1674527932956409860/ja7Woiz6_400x400.jpg',
-            deployer:'', address:'', chain:'', conf:{},
-            balance:{}, tokens:[], selectedToken:{}, currencies:[],
+            message:'',
+            testnet:'FairyRing Testnet',
+            deployer:'',
+            address:'',
+            chain:'',
+            conf:{},
+            balance:{},
+            tokens:[],
+            selectedToken:'',
+            currencies:[]
           };
         },
-
         created() {
           fetch('/config.json')
             .then(r=>r.json())
-            .then(data=>{
-              this.conf=data; this.testnet=data.name; this.logo=data.logo;
-              this.chain=data.blockchain; this.tokens=data.tokens;
-              this.selectedToken=data.currencies[0].coinDenom;
-              this.currencies=data.currencies; this.onChange();
-              if(data.deployer) this.deployer=`Hosted by ${data.deployer}`;
-
-              /* Keplr opt-in */
-              if(!window.keplr) return;
-              window.keplr.experimentalSuggestChain({
-                chainId:this.chain,rpc:data.endpoint.rpc,api:data.endpoint.api,
-                chainName:this.testnet,
-                stakeCurrency:{coinDenom:'FAIRY',coinDecimals:6,coinMinimalDenom:'ufairy'},
-                bip44:{coinType:118},feeCurrencies:[],currencies:this.currencies,
-                bech32Config:{
-                  bech32PrefixAccAddr:data.prefix,
-                  bech32PrefixAccPub:data.prefix+'pub',
-                  bech32PrefixValAddr:data.prefix+'valoper',
-                  bech32PrefixValPub:data.prefix+'valoperpub',
-                  bech32PrefixConsAddr:data.prefix+'valcons',
-                  bech32PrefixConsPub:data.prefix+'valconspub',
-                },
-              }).then(()=>window.keplr.enable(this.chain))
-                .then(()=>window.keplr.getKey(this.chain))
-                .then(k=>this.address=k.bech32Address);
-            }).catch(console.error);
+            .then(d=>{
+              this.conf=d;
+              this.testnet=d.name;
+              this.chain=d.blockchain;
+              this.currencies=d.currencies;
+              this.selectedToken=this.currencies[0].coinDenom;
+              this.onChange();
+              if(d.deployer) this.deployer=`Hosted by ${d.deployer}`;
+            });
         },
-
         computed:{
-          placeholder(){
-            if(this.conf.sample)
-              return `Input an address (e.g. ${this.conf.sample[this.chain]}) to receive tokens`;
-            return 'Input an address to receive tokens';
-          },
-          faucet(){ return this.conf.sample ? this.conf.sample[this.chain] : ''; },
+          placeholder(){return this.conf.sample?`Input an address (e.g. ${this.conf.sample[this.chain]}) to receive tokens`:'Input an address to receive tokens'},
+          faucet(){return this.conf.sample?this.conf.sample[this.chain]:''}
         },
-
         methods:{
-          findSelectedTokenMinimalDenom(denom){
-            return this.currencies.find(c=>c.coinDenom===denom)?.coinMinimalDenom||null;
+          buildFeeCurrency(base){
+            return {
+              ...base,                         // coinDenom / coinMinimalDenom / decimals
+              gasPriceStep:{ low:0.025, average:0.04, high:0.06 }  // any reasonable values
+              // coinGeckoId:"fairy"            // optional but nice
+            };
           },
+          findSelectedTokenMinimalDenom(d){return this.currencies.find(c=>c.coinDenom===d)?.coinMinimalDenom||null},
           onChange(){
             this.balance={};
-            const d=this.findSelectedTokenMinimalDenom(this.selectedToken);
-            if(!d) return;
-            fetch(`/balance/${d}`).then(r=>r.json()).then(b=>this.balance=b);
+            const denom=this.findSelectedTokenMinimalDenom(this.selectedToken);
+            if(!denom)return;
+            fetch(`/balance/${denom}`).then(r=>r.json()).then(b=>this.balance=b);
           },
           requestToken(btn){
-            if(!this.address){
-              this.message='<span class="text-danger">Address is required</span>'; return;
-            }
-            btn.disabled=true; document.getElementById('button-loading').style.display='block';
-            const d=this.findSelectedTokenMinimalDenom(this.selectedToken); if(!d) return;
-            fetch(`/send/${this.address}/${d}`).then(r=>r.json()).then(data=>{
-              btn.disabled=false; document.getElementById('button-loading').style.display='none';
+            if(!this.address){this.message='<span class="text-danger">Address is required</span>';return;}
+            btn.disabled=true;document.getElementById('button-loading').style.display='block';
+            const denom=this.findSelectedTokenMinimalDenom(this.selectedToken);
+            fetch(`/send/${this.address}/${denom}`).then(r=>r.json()).then(data=>{
+              btn.disabled=false;document.getElementById('button-loading').style.display='none';
               this.message=`<div class="alert alert-${data.result.code===0?'success':'danger'} alert-dismissible fade show mt-2" role="alert">
                 <strong>${data.result.code===0?'Token sent!':'Request failed'}</strong>
-                <textarea class="form-control mt-2" rows="4" style="background:transparent">${JSON.stringify(data,null,2)}</textarea>
+                <textarea class="form-control mt-2" rows="4">${JSON.stringify(data,null,2)}</textarea>
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
               </div>`;
             });
           },
-        },
+          async suggest(wallet){
+            const feeCur = this.buildFeeCurrency(this.currencies[0]);
+            await wallet.experimentalSuggestChain({
+              chainId:this.chain,
+              rpc:this.conf.endpoint.rpc,
+              rest:this.conf.endpoint.api,
+              chainName:"Fairblock FairyRing Testnet",
+              stakeCurrency:feeCur,
+              bip44:{coinType:118},
+              feeCurrencies:[feeCur],  
+              currencies:this.currencies,
+              bech32Config:{
+                bech32PrefixAccAddr:this.conf.prefix,
+                bech32PrefixAccPub:this.conf.prefix+'pub',
+                bech32PrefixValAddr:this.conf.prefix+'valoper',
+                bech32PrefixValPub:this.conf.prefix+'valoperpub',
+                bech32PrefixConsAddr:this.conf.prefix+'valcons',
+                bech32PrefixConsPub:this.conf.prefix+'valconspub'
+              }
+            });
+          },
+          async connectKeplr(){
+            if(!window.keplr){alert('Keplr extension not found');return;}
+            await this.suggest(window.keplr);
+            await window.keplr.enable(this.chain);
+            this.address=(await window.keplr.getKey(this.chain)).bech32Address;
+          },
+          async connectLeap(){
+            if(!window.leap){alert('Leap extension not found');return;}
+            await this.suggest(window.leap);
+            await window.leap.enable(this.chain);
+            this.address=(await window.leap.getKey(this.chain)).bech32Address;
+          }
+        }
       }).mount('#app');
     </script>
-
-    <!-- ░░░ bootstrap  js ░░░ -->
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
-      crossorigin="anonymous"
-    ></script>
-    <!-- ─── How It Works Modal ─────────────────────────────────────────── -->
-<div
-class="modal fade"
-id="howItWorksModal"
-tabindex="-1"
-aria-labelledby="howItWorksLabel"
-aria-hidden="true"
->
-<div class="modal-dialog modal-dialog-centered">
-  <div class="modal-content glass p-4">
-    <div class="modal-header border-0">
-      <h5
-        class="modal-title text-center w-100"
-        id="howItWorksLabel"
-      >
-        How it works
-      </h5>
-      <button
-        type="button"
-        class="btn-close btn-close-white"
-        data-bs-dismiss="modal"
-        aria-label="Close"
-      ></button>
-    </div>
-    <div class="modal-body text-white fs-5">
-      <p>If you do not have a Keplr or Leap wallet, install one:</p>
-      <ul>
-        <li>
-          <a href="https://www.keplr.app/" target="_blank" class="text-decoration-underline text-light">
-            Install Keplr Wallet
-          </a>
-        </li>
-        <li>
-          <a href="https://www.leapwallet.io/" target="_blank" class="text-decoration-underline text-light">
-            Install Leap Wallet
-          </a>
-        </li>
-      </ul>
-      <hr class="border-secondary" />
-
-      <h6 class="mt-3">🔹 Keplr (automatic)</h6>
-      <ol>
-        <li>The faucet will detect your Keplr extension.</li>
-        <li>It will auto-switch your network to FairyRing Testnet.</li>
-        <li>Your wallet address will be filled into the input box.</li>
-      </ol>
-
-      <h6 class="mt-4">🔹 Leap (manual)</h6>
-      <ol>
-        <li>Open your Leap extension popup.</li>
-        <li>Manually add the “Fairblock FairyRing Testnet” network.</li>
-        <li>Copy your address and paste it into the faucet.</li>
-      </ol>
-
-      <p class="mt-3">
-        You may request FAIRY tokens <strong>once per hour</strong>.
-      </p>
-      <p class="mt-2 text-warning">
-        If you already see “Tokens Sent”, please don’t submit another request.  
-        It may take some time for the testnet tokens to arrive.
-      </p>
-    </div>
-
-    <div class="modal-footer border-0 justify-content-center">
-      <button
-        type="button"
-        class="btn btn-docs px-4 py-2"
-        data-bs-dismiss="modal"
-      >
-        Got it
-      </button>
-    </div>
-  </div>
-</div>
-</div>
-<!-- ──────────────────────────────────────────────────────────────────── -->
-
   </body>
 </html>

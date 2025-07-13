@@ -28,175 +28,11 @@
     />
 
     <!-- ───────── custom styles ────────────────────────────────────────── -->
-    <style>
-      body {
-        font-family: "EB Garamond", serif;
-        color: #e2e8f0;
-        background: radial-gradient(
-          circle at 50% 30%,
-          #bcc4d4 0%,
-          #4d5869 100%
-        );
-        min-height: 100vh;
-      }
-      .glass h1 {
-        color: #46a2ff;
-      }
-      .alert-danger textarea.form-control,
-      .alert-success textarea.form-control {
-        color: #0d0d0d !important;
-        background: rgba(255, 255, 255, 0.2) !important;
-        border-color: rgba(0, 0, 0, 0.15) !important;
-      }
-      #bg-video {
-        position: fixed;
-        inset: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        z-index: -2;
-        background: transparent;
-      }
-      .vignette {
-        position: fixed;
-        inset: 0;
-        background: radial-gradient(
-          circle at 50% 30%,
-          rgba(0, 25, 56, 0) 0%,
-          rgba(0, 25, 56, 0.4) 60%,
-          rgba(0, 15, 35, 0.85) 100%
-        );
-        z-index: -1;
-      }
-      h1 {
-        font-size: 3.5rem;
-        font-weight: 800;
-      }
-      .lead {
-        font-size: 1.25rem;
-      }
-      .quick-links a,
-      .quick-links button {
-        font-weight: 600;
-        letter-spacing: 0.02em;
-      }
-      .btn-faq {
-        background: #fff;
-        color: #0d0d0d;
-      }
-      .btn-docs {
-        background: #46a2ff;
-        color: #fff;
-      }
-      .btn-faq:hover {
-        background: #d9d9d9;
-        color: #0d0d0d;
-      }
-      .btn-docs:hover {
-        background: #1f83f5;
-        color: #fff;
-      }
-      .glass {
-        border-radius: 0.75rem;
-        padding: 3.5rem 2rem 4rem;
-        border: 1px solid rgba(255, 255, 255, 0.05);
-        background: rgba(8, 14, 29, 0.55);
-      }
-      @supports (backdrop-filter: blur(10px)) {
-        .glass {
-          backdrop-filter: blur(10px) brightness(1.05);
-        }
-      }
-      .glass .form-control,
-      .glass .input-group-text,
-      .glass select {
-        background: rgba(255, 255, 255, 0.05);
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        color: #e2e8f0;
-      }
-      .glass .btn-primary {
-        background: #46a2ff;
-        border: none;
-        font-weight: 700;
-        padding-inline: 2rem;
-      }
-      .glass .btn-primary:hover {
-        background: #1f83f5;
-      }
-      .social a {
-        display: inline-flex;
-        width: 44px;
-        height: 44px;
-        align-items: center;
-        justify-content: center;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.05);
-        color: #e2e8f0;
-        margin: 0 6px;
-        transition: background 0.2s;
-      }
-      .social a:hover {
-        background: rgba(255, 255, 255, 0.15);
-        text-decoration: none;
-      }
-      /* ░░░ phone view tweaks  ░░░ */
-      @media (max-width: 576px) {
-        /* Bootstrap “xs” breakpoint */
-        /* header: logo above buttons */
-        header.container-xl {
-          flex-direction: column !important;
-          gap: 1rem;
-          text-align: center;
-        }
-        header img {
-          width: 180px !important;
-        }
-        .input-group .form-control {
-          width: 100% !important;
-        }
-
-        /* quick-links: stack & stretch */
-        .quick-links {
-          flex-wrap: wrap;
-          width: 100%;
-          gap: 0.5rem !important;
-        }
-        .quick-links .btn {
-          flex: 1 1 auto;
-        }
-
-        /* hero glass card */
-        .glass {
-          padding: 2rem 1.25rem !important;
-        }
-        .glass h1 {
-          font-size: 2.2rem !important;
-        }
-
-        /* input-group: keep elements on their own lines */
-        .input-group {
-          flex-direction: column;
-        }
-        .input-group > :not(:last-child) {
-          border-radius: 0.375rem !important; /* nice rounded corners */
-          margin-bottom: 0.75rem !important; /* spacing between rows */
-        }
-        .input-group-text select {
-          width: 100% !important;
-        }
-        .glass .btn-primary {
-          width: 100%;
-          justify-content: center;
-        }
-
-        /* footer socials smaller gap */
-        .social a {
-          width: 36px;
-          height: 36px;
-          margin: 0 4px;
-        }
-      }
-    </style>
+    <link rel="stylesheet" href="./index.css" />
+    <script
+      src="https://kit.fontawesome.com/436d1b6991.js"
+      crossorigin="anonymous"
+    ></script>
   </head>
 
   <body>
@@ -215,7 +51,7 @@
     <div class="vignette"></div>
 
     <!-- ░░░ Vue root ░░░ -->
-    <div id="app" class="d-flex flex-column min-vh-100">
+    <div id="app" class="flex-grow-1 d-flex flex-column min-vh-100">
       <!-- notice bar -->
       <div class="text-center py-1" style="background: #2774d2">
         We're experiencing a very high demand, please try again later if the
@@ -224,13 +60,13 @@
 
       <!-- header -->
       <header
-        class="container-xl py-4 d-flex justify-content-between align-items-center"
+        class="container-xl py-2 d-flex justify-content-between align-items-center"
       >
-        <img src="./White_logo.png" alt="Fairblock" style="width: 320px" />
+        <img src="./White_logo.png" alt="Fairblock" style="width: 280px" />
         <div class="quick-links d-flex gap-3">
           <button
             type="button"
-            class="btn btn-faq px-4 py-2"
+            class="btn btn-faq roboto-text px-3 py-1"
             data-bs-toggle="modal"
             data-bs-target="#connectModal"
           >
@@ -238,7 +74,7 @@
           </button>
           <button
             type="button"
-            class="btn btn-faq px-4 py-2"
+            class="btn btn-faq px-3 py-1"
             data-bs-toggle="modal"
             data-bs-target="#howItWorksModal"
           >
@@ -246,7 +82,7 @@
           </button>
           <a
             href="https://docs.fairblock.network/docs/welcome/Vision"
-            class="btn btn-docs px-4 py-2"
+            class="btn btn-docs px-3 py-1"
             >Docs</a
           >
         </div>
@@ -254,11 +90,11 @@
 
       <!-- main panel -->
       <main
-        class="container-xl flex-grow-1 d-flex flex-column align-items-center justify-content-center"
+        class="container-xl d-flex flex-column align-items-center justify-content-center"
       >
         <section class="glass col-12 col-lg-8 col-xl-6">
-          <h1 class="text-center mb-3">Fairblock Faucet</h1>
-          <p class="lead text-center mb-5">Bootstrap your testnet wallet</p>
+          <h1 class="text-blue text-center mb-3">Fairblock Faucet</h1>
+          <p class="lead text-center mb-4">Bootstrap your testnet wallet</p>
 
           <div class="input-group mb-4">
             <span class="input-group-text p-0">
@@ -280,35 +116,35 @@
               :placeholder="placeholder"
               name="address"
             />
-            <button
-              type="button"
-              class="btn btn-primary d-flex align-items-center"
-              @click="requestToken($event.target)"
-            >
-              <span
-                id="button-loading"
-                class="spinner-border spinner-border-sm me-2"
-                style="display: none"
-                role="status"
-                aria-hidden="true"
-              ></span>
-              Request&nbsp;token
-            </button>
           </div>
 
-          <div id="message" v-html="message"></div>
+          <button
+            type="button"
+            class="btn btn-primary d-flex align-items-center"
+            @click="requestToken($event.target)"
+          >
+            <span
+              id="button-loading"
+              class="spinner-border spinner-border-sm me-2"
+              style="display: none"
+              role="status"
+              aria-hidden="true"
+            ></span>
+            Request&nbsp;token
+          </button>
 
-          <p class="text-center mt-5 fs-6" style="opacity: 0.85">
-            This is <strong>NOT</strong> an incentivized testnet — please don’t
-            farm tokens.<br />
-            You can request once every hour.<br />
-            Testnet tokens may take time — avoid frequent requests.
-          </p>
+          <div id="message" v-html="message"></div>
         </section>
       </main>
 
       <!-- footer -->
       <footer class="container-xl pb-4 text-center">
+        <p class="text-center mt-5 fs-6" style="opacity: 0.85">
+          This is <strong>NOT</strong> an incentivized testnet — please don’t
+          farm tokens.<br />
+          You can request once every hour.<br />
+          Testnet tokens may take time — avoid frequent requests.
+        </p>
         <p class="small mb-1" v-if="balance.amount">
           Faucet Address: {{ faucet }}<br />
           Balance: {{ balance.amount }} {{ balance.denom }}
@@ -322,35 +158,11 @@
             aria-label="Discord"
           >
             <!-- discord SVG -->
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="16"
-              viewBox="0 0 127.14 96.36"
-            >
-              <path
-                fill="currentColor"
-                d="M107.69 8.41A105.15 105.15 0 0 0 81.73 0l-1.75 3.66c17 3.73 24.7 9.08 24.7 9.08-20-9.1-47.22-9.1-65.38-2.28a102.88 102.88 0 0 0-11 5.09l-.53.24s8.29-5.08 26-9.1L50 0a105.23 105.23 0 0 0-25.95 8.41C3.49 37.64.58 66.07.58 94.09A105.27 105.27 0 0 0 31.45 107l4.74-5.48a69.7 69.7 0 0 1-10.5-5.48l1.7-2c20.35 9.26 42.42 9.26 62.24 0l1.7 2a74.1 74.1 0 0 1-10.5 5.48L95.69 107a105.27 105.27 0 0 0 30.87-12.91c0-28-2.9-56.45-18.87-85.68Z"
-              />
-              <path
-                fill="currentColor"
-                d="M42.16 65c-6.03 0-10.88-5.43-10.88-12.1s4.89-12.11 10.88-12.11S53 46.26 53 52.93 48.19 65 42.16 65Zm42.55 0c-6 0-10.88-5.43-10.88-12.1s4.89-12.11 10.88-12.11S95.6 46.26 95.6 52.93 90.7 65 84.71 65Z"
-              />
-            </svg>
+            <i class="fa-brands fa-discord"></i>
           </a>
           <a href="https://x.com/0xfairblock" target="_blank" aria-label="X">
             <!-- X SVG -->
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-            >
-              <path
-                fill="currentColor"
-                d="M23.643 4.937a9.85 9.85 0 0 1-2.828.775 4.932 4.932 0 0 0 2.164-2.724 10.114 10.114 0 0 1-3.127 1.195A4.916 4.916 0 0 0 16.616 3c-2.72 0-4.926 2.2-4.926 4.917 0 .39.042.765.13 1.125C7.728 8.83 4.1 6.88 1.671 3.962A4.822 4.822 0 0 0 1 6.184c0 1.708.873 3.216 2.193 4.099a4.892 4.892 0 0 1-2.23-.616v.063c0 2.385 1.693 4.374 3.946 4.827a4.897 4.897 0 0 1-2.224.085c.628 1.956 2.445 3.38 4.6 3.42A9.87 9.87 0 0 1 0 19.543 13.897 13.897 0 0 0 7.548 22c9.06 0 14.01-7.498 14.01-13.986 0-.21 0-.42-.015-.63A10.025 10.025 0 0 0 24 4.59a9.72 9.72 0 0 1-2.357.647Z"
-              />
-            </svg>
+            <i class="fa-brands fa-x-twitter"></i>
           </a>
           <a
             href="https://github.com/Fairblock"
@@ -358,17 +170,7 @@
             aria-label="Telegram"
           >
             <!-- telegram SVG -->
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-            >
-              <path
-                fill="currentColor"
-                d="M12 0C5.373 0 0 5.373 0 12c0 5.093 3.163 9.444 7.593 11.186.556.102.761-.241.761-.536 0-.265-.01-1.145-.016-2.079-3.09.673-3.744-1.492-3.744-1.492-.504-1.279-1.231-1.619-1.231-1.619-.984-.672.075-.659.075-.659 1.086.077 1.658 1.113 1.658 1.113.967 1.656 2.537 1.179 3.159.907.099-.693.379-1.179.689-1.45-2.459-.278-5.035-1.236-5.035-5.508 0-1.219.438-2.218 1.158-3.002-.115-.278-.502-1.399.109-2.915 0 0 .951-.304 3.114 1.145A10.85 10.85 0 0 1 12 6.844c.964.004 1.93.131 2.835.385 2.159-1.452 3.109-1.145 3.109-1.145.614 1.516.227 2.637.112 2.915.723.784 1.155 1.783 1.155 3.002 0 4.283-2.581 5.226-5.043 5.498.391.336.742.996.742 2.007 0 1.45-.014 2.619-.014 2.975 0 .298.2.645.768.535C20.844 21.44 24 17.09 24 12c0-6.627-5.373-12-12-12Z"
-              />
-            </svg>
+            <i class="fa-brands fa-github"></i>
           </a>
         </div>
       </footer>

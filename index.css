@@ -1,0 +1,200 @@
+@import url("https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
+
+body {
+  font-family: "EB Garamond", serif;
+  color: #e2e8f0;
+  background: radial-gradient(circle at 50% 30%, #bcc4d4 0%, #4d5869 100%);
+  min-height: 100vh;
+}
+
+.glass h1 {
+  color: #58BDF6;
+}
+
+.alert-danger textarea.form-control,
+.alert-success textarea.form-control {
+  color: #0d0d0d !important;
+  background: rgba(255, 255, 255, 0.2) !important;
+  border-color: rgba(0, 0, 0, 0.15) !important;
+}
+
+#bg-video {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -2;
+  background: transparent;
+}
+
+/* .vignette {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(
+    circle at 50% 30%,
+    rgba(0, 25, 56, 0) 0%,
+    rgba(0, 25, 56, 0.4) 60%,
+    rgba(0, 15, 35, 0.85) 100%
+  );
+  z-index: -1;
+} */
+
+h1 {
+  font-size: 3.5rem;
+  font-weight: 800;
+}
+
+.lead {
+  font-size: 1.25rem;
+}
+
+.quick-links a,
+.quick-links button {
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.btn {
+  font-family: "Roboto", sans-serif;;
+}
+
+.btn-faq {
+  background: #fff;
+  color: #0d0d0d;
+}
+
+.btn-docs {
+  background: #58BDF6;
+  color: #0d0d0d;
+}
+
+.btn-faq:hover {
+  background: #d9d9d9;
+  color: #0d0d0d;
+}
+
+.btn-docs:hover {
+  background: #46ACE5;
+  color: #0d0d0d;
+}
+
+.glass {
+  border-radius: 0.75rem;
+  padding: 3.5rem 2rem 3.5rem;
+  /* border: 1px solid rgba(255, 255, 255, 0.05); */
+  /* background: rgba(8, 14, 29, 0.55); */
+}
+
+@supports (backdrop-filter: blur(10px)) {
+  .glass {
+    backdrop-filter: blur(10px) brightness(1.05);
+  }
+}
+
+.glass h1 {
+  font-size: 4.5rem;
+}
+
+.glass .input-group {
+  border: 0.5px solid #58BDF6;
+  border-radius: 10px;
+}
+
+.glass .form-control,
+.glass .input-group-text,
+.glass select {
+  background: rgba(255, 255, 255, 0.05);
+  border: 0.5px solid #58BDF6;
+  color: #e2e8f0;
+}
+
+.glass .btn-primary {
+  background: #58BDF6;
+  border: none;
+  color: #0d0d0d;
+  font-weight: 700;
+  padding-inline: 2rem;
+  margin: auto;
+}
+
+.glass .btn-primary:hover {
+  background: #46ACE5;
+}
+
+.social a {
+  display: inline-flex;
+  width: 44px;
+  height: 44px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  color: #e2e8f0;
+  margin: 0 6px;
+  transition: background 0.2s;
+  text-decoration: none;
+  color: #58BDF6;
+}
+
+.social a:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* ░░░ phone view tweaks  ░░░ */
+@media (max-width: 576px) {
+  /* Bootstrap “xs” breakpoint */
+  /* header: logo above buttons */
+  header.container-xl {
+    flex-direction: column !important;
+    gap: 1rem;
+    text-align: center;
+  }
+  header img {
+    width: 180px !important;
+  }
+  .input-group .form-control {
+    width: 100% !important;
+  }
+
+  /* quick-links: stack & stretch */
+  .quick-links {
+    flex-wrap: wrap;
+    width: 100%;
+    gap: 0.5rem !important;
+  }
+  .quick-links .btn {
+    flex: 1 1 auto;
+  }
+
+  /* hero glass card */
+  .glass {
+    padding: 2rem 1.25rem !important;
+  }
+  .glass h1 {
+    font-size: 2.2rem !important;
+  }
+
+  /* input-group: keep elements on their own lines */
+  .input-group {
+    flex-direction: column;
+  }
+  .input-group > :not(:last-child) {
+    border-radius: 0.375rem !important; /* nice rounded corners */
+    margin-bottom: 0.75rem !important; /* spacing between rows */
+  }
+  .input-group-text select {
+    width: 100% !important;
+  }
+  .glass .btn-primary {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* footer socials smaller gap */
+  .social a {
+    width: 36px;
+    height: 36px;
+    margin: 0 4px;
+  }
+}

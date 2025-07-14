@@ -83,12 +83,20 @@ h1 {
   border-radius: 0.75rem;
   padding: 3.5rem 2rem 3.5rem;
   /* border: 1px solid rgba(255, 255, 255, 0.05); */
-  /* background: rgba(8, 14, 29, 0.55); */
+  background: rgba(8, 14, 29, 0.55);
+}
+
+.remove-bg {
+  background: transparent !important;
+  
 }
 
 @supports (backdrop-filter: blur(10px)) {
   .glass {
     backdrop-filter: blur(10px) brightness(1.05);
+  }
+  .remove-bg {
+    backdrop-filter: blur(0px) brightness(1);
   }
 }
 

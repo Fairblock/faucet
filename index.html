@@ -157,11 +157,9 @@
             target="_blank"
             aria-label="Discord"
           >
-            <!-- discord SVG -->
             <i class="fa-brands fa-discord"></i>
           </a>
           <a href="https://x.com/0xfairblock" target="_blank" aria-label="X">
-            <!-- X SVG -->
             <i class="fa-brands fa-x-twitter"></i>
           </a>
           <a
@@ -169,7 +167,6 @@
             target="_blank"
             aria-label="Telegram"
           >
-            <!-- telegram SVG -->
             <i class="fa-brands fa-github"></i>
           </a>
         </div>
@@ -314,6 +311,19 @@
     <script type="module">
       import { createApp } from "https://unpkg.com/vue@3/dist/vue.esm-browser.js";
 
+      const HOST  = encodeURIComponent("https://testnet-faucet.fairblock.network");
+const IOS   = `keplrwallet://web-browser?url=${HOST}`;
+const AND   = `intent://web-browser?url=${HOST}#Intent;package=com.chainapsis.keplr;scheme=keplrwallet;end;`;
+const FALL  = `https://deeplink.keplr.app/web-browser?url=${HOST}`;
+      
+      function openKeplr() {
+        const isiOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+        location.href = isiOS ? IOS : AND;          // 1️⃣ single jump – no window.open
+        /* optional 1 s fallback */
+        setTimeout(() => { if (!window.keplr) location.href = FALL; }, 1000);
+      }
+      /* ──────────────────────────────────────────────────────────────── */
+
       createApp({
         data() {
           return {
@@ -350,9 +360,7 @@
         computed: {
           placeholder() {
             return this.conf.sample
-              ? `Input an address (e.g. ${
-                  this.conf.sample[this.chain]
-                }) to receive tokens`
+              ? `Input an address (e.g. ${this.conf.sample[this.chain]}) to receive tokens`
               : "Input an address to receive tokens";
           },
           faucet() {
@@ -365,22 +373,19 @@
           },
           buildFeeCurrency(base) {
             return {
-              ...base, // coinDenom / coinMinimalDenom / decimals
-              gasPriceStep: { low: 0.025, average: 0.04, high: 0.06 }, // any reasonable values
-              // coinGeckoId:"fairy"            // optional but nice
+              ...base,
+              gasPriceStep: { low: 0.025, average: 0.04, high: 0.06 },
             };
           },
           findSelectedTokenMinimalDenom(d) {
             return (
-              this.currencies.find((c) => c.coinDenom === d)
-                ?.coinMinimalDenom || null
+              this.currencies.find((c) => c.coinDenom === d)?.coinMinimalDenom ||
+              null
             );
           },
           onChange() {
             this.balance = {};
-            const denom = this.findSelectedTokenMinimalDenom(
-              this.selectedToken
-            );
+            const denom = this.findSelectedTokenMinimalDenom(this.selectedToken);
             if (!denom) return;
             fetch(`/balance/${denom}`)
               .then((r) => r.json())
@@ -394,9 +399,7 @@
             }
             btn.disabled = true;
             document.getElementById("button-loading").style.display = "block";
-            const denom = this.findSelectedTokenMinimalDenom(
-              this.selectedToken
-            );
+            const denom = this.findSelectedTokenMinimalDenom(this.selectedToken);
             fetch(`/send/${this.address}/${denom}`)
               .then((r) => r.json())
               .then((data) => {
@@ -406,16 +409,16 @@
                 this.message = `<div class="alert alert-${
                   data.result.code === 0 ? "success" : "danger"
                 } alert-dismissible fade show mt-2" role="alert">
-                <strong>${
-                  data.result.code === 0 ? "Token sent!" : "Request failed"
-                }</strong>
-                <textarea class="form-control mt-2" rows="4">${JSON.stringify(
-                  data,
-                  null,
-                  2
-                )}</textarea>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-              </div>`;
+                  <strong>${
+                    data.result.code === 0 ? "Token sent!" : "Request failed"
+                  }</strong>
+                  <textarea class="form-control mt-2" rows="4">${JSON.stringify(
+                    data,
+                    null,
+                    2
+                  )}</textarea>
+                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>`;
               });
           },
           async suggest(wallet) {
@@ -439,48 +442,43 @@
               },
             });
           },
-          /* ── Keplr connection (mobile-aware + URL param) ─────────────────────── */
+          /* ── Keplr connection (mobile-aware) ───────────────────────── */
           async connectKeplr() {
-            /* 1 ▸ If Keplr is already injected (desktop extension OR Keplr in-app browser)
-                  we can safely prompt the user and fetch the address. */
+            /* A ▸ Desktop extension OR already inside Keplr mobile-browser */
             if (window.keplr) {
-              await this.suggest(window.keplr); // add chain if needed
-              await window.keplr.enable(this.chain); // <== requires a gesture
-              const { bech32Address } = await window.keplr.getKey(this.chain);
-              this.address = bech32Address;
+              await this.suggest(window.keplr);
+              await window.keplr.enable(this.chain);
+              this.address = (await window.keplr.getKey(this.chain))
+                .bech32Address;
               return;
             }
 
-            /* 2 ▸ Otherwise we're in Safari/Chrome without an extension.
-                  Deep-link to Keplr and ask the user to tap Connect again there. */
-            const target = `https://deeplink.keplr.app/show-address?chainId=fairyring-testnet-3`;
-            location.href = target;
+            /* B ▸ Stand-alone mobile browsers → open in-app browser */
+            if (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)){
+              openKeplr();                // ← new helper
+              return;
+            }
+
+            /* C ▸ Desktop without extension */
+            alert("Keplr extension not found — please install it first.");
           },
 
           /* helper actually talking to Keplr ------------------------------------- */
           async _doKeplrConnect(provider) {
             try {
-              /* 1 ▸ Add the chain if the wallet supports suggest-chain.
-               *     Mobile < v1.9 didn’t – so ignore "method not found". */
               try {
                 await this.suggest(provider);
               } catch (e) {
                 if (!/Suggest|experimental/i.test(e.message)) throw e;
               }
-
-              /* 2 ▸ Enable the chain (does nothing if it was already enabled). */
               await provider.enable(this.chain);
-
-              /* 3 ▸ Always get the key – even when there was no UI. */
               const { bech32Address } = await provider.getKey(this.chain);
               this.address = bech32Address;
 
-              /* 4 ▸ Persist in the URL so refresh/share keeps the address. */
               const u = new URL(location.href);
               u.searchParams.set("addr", bech32Address);
               history.replaceState({}, "", u);
 
-              /* 5 ▸ Close the modal if it’s still open (nice touch). */
               const m = bootstrap?.Modal?.getInstance(
                 document.getElementById("connectModal")
               );
@@ -494,19 +492,16 @@
           },
 
           async connectLeap() {
-            /* 1 ▸ normal extension / in-app browser path */
             if (window.leap) {
               await this.suggest(window.leap);
               await window.leap.enable(this.chain);
               this.address = (
                 await window.leap.getKey(this.chain)
               ).bech32Address;
-              return; // ✅ all set
+              return;
             }
-
-            /* 2 ▸ mobile or desktop *without* extension → use pre-made deep-link */
             const deeplink =
-              "https://leapcosmoswallet.page.link/eK2bZ5Repr45qqt98"; // ← your slug
+              "https://leapcosmoswallet.page.link/eK2bZ5Repr45qqt98";
             window.location.href = deeplink;
           },
         },

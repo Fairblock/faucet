@@ -19,7 +19,7 @@ export default {
         addressPrefix: "fairy",
         sender: {
            accountName: "faucet",
-           keyRingPass: "12345678"
+           keyRingPass: "your_password"
         },
         tx: [
             {
@@ -38,10 +38,10 @@ export default {
         ],
         limit: {
             // how many times each wallet address is allowed in a window(24h)
-            address: 1,
+            address: 3,
             // how many times each ip is allowed in a window(24h),
             // if you use proxy, double check if the req.ip is return client's ip.
-            ip: 1
+            ip: 3
         }
     },
 }
